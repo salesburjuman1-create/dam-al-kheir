@@ -53,24 +53,24 @@
         <div class="container">
             <!-- Filters -->
             <div class="filters-bar fade-in">
-                <input class="search-input" type="search" placeholder="🔍 ابحث بالمستشفى أو المدينة...">
-                <select class="filter-select">
+                <input class="search-input" type="search" id="reqSearch" placeholder="🔍 ابحث بالمستشفى أو المدينة..." oninput="filterRequests()">
+<select class="filter-select" id="reqBloodFilter" onchange="filterRequests()">
                     <option value="">كل فصائل الدم</option>
                     <option>A+</option><option>A-</option>
                     <option>B+</option><option>B-</option>
                     <option>AB+</option><option>AB-</option>
                     <option>O+</option><option>O-</option>
                 </select>
-                <select class="filter-select">
+                <select class="filter-select" id="reqCityFilter" onchange="filterRequests()">
                     <option value="">كل المحافظات</option>
                     <option>بغداد</option><option>البصرة</option>
                     <option>الموصل</option><option>كربلاء</option>
                     <option>النجف</option><option>أربيل</option>
                 </select>
-                <select class="filter-select">
-                    <option>الكل</option>
-                    <option>طارئ فقط</option>
-                    <option>مجدول</option>
+                <select class="filter-select" id="reqUrgencyFilter" onchange="filterRequests()">
+                    <option value="">الكل</option>
+                     <option value="urgent">طارئ فقط</option>
+    <option value="normal">مجدول</option>
                 </select>
             </div>
 
