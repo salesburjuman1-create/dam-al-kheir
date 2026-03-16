@@ -211,32 +211,23 @@
 </head>
 <body>
 
-<!-- Login Gate -->
-<div id="adminLoginGate" style="min-height:100vh;background:#0F0F0F;display:flex;align-items:center;justify-content:center">
-    <div style="background:#141414;border:1px solid #222;border-radius:20px;padding:40px;width:100%;max-width:400px;text-align:center">
-        <div style="width:60px;height:60px;background:var(--red);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:var(--shadow-red)">
-            <i class="fas fa-shield-alt" style="color:white;font-size:1.5rem"></i>
+<!-- Access Gate — يظهر فقط إذا المستخدم مو أدمن أو غير مسجل -->
+<div id="adminLoginGate" style="display:none;min-height:100vh;background:#0F0F0F;align-items:center;justify-content:center">
+    <div style="background:#141414;border:1px solid #222;border-radius:20px;padding:48px 40px;width:100%;max-width:400px;text-align:center">
+        <div style="width:64px;height:64px;background:#1A0005;border:1px solid #3A0010;border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 24px">
+            <i class="fas fa-lock" style="color:var(--red);font-size:1.6rem"></i>
         </div>
-        <h2 style="color:white;font-size:1.3rem;font-weight:800;margin-bottom:8px">لوحة الإدارة</h2>
-        <p style="color:#555;font-size:0.875rem;margin-bottom:28px">هذه المنطقة للمشرفين فقط</p>
-        <div style="margin-bottom:14px;text-align:right">
-            <label style="font-size:0.8rem;color:#888;display:block;margin-bottom:6px">البريد الإلكتروني</label>
-            <input id="adminEmail" type="email" placeholder="sales.burjuman1@gmail.com"
-                style="width:100%;padding:12px 16px;background:#111;border:1px solid #2A2A2A;border-radius:10px;font-family:'Cairo',sans-serif;font-size:0.9rem;color:#ccc;outline:none">
-        </div>
-        <div style="margin-bottom:20px;text-align:right">
-            <label style="font-size:0.8rem;color:#888;display:block;margin-bottom:6px">كلمة المرور</label>
-            <input id="adminPass" type="password" placeholder="••••••••"
-                style="width:100%;padding:12px 16px;background:#111;border:1px solid #2A2A2A;border-radius:10px;font-family:'Cairo',sans-serif;font-size:0.9rem;color:#ccc;outline:none">
-        </div>
-        <button onclick="adminLogin()" id="adminLoginBtn"
-            style="width:100%;padding:14px;background:var(--red);color:white;border:none;border-radius:50px;font-family:'Cairo',sans-serif;font-size:1rem;font-weight:700;cursor:pointer">
-            <i class="fas fa-sign-in-alt"></i> دخول الإدارة
-        </button>
-        <p id="adminLoginError" style="color:var(--red-light);font-size:0.8rem;margin-top:12px;display:none"></p>
+        <h2 style="color:white;font-size:1.2rem;font-weight:800;margin-bottom:10px">صلاحية مرفوضة</h2>
+        <p style="color:#555;font-size:0.875rem;margin-bottom:8px;line-height:1.7" id="accessMsg">
+            ليس لديك صلاحية الوصول لهذه الصفحة
+        </p>
+        <p style="color:#333;font-size:0.78rem;margin-bottom:28px">هذه المنطقة للمشرفين فقط</p>
+        <a href="index.html"
+            style="display:block;padding:13px;background:var(--red);color:white;border-radius:50px;font-family:'Cairo',sans-serif;font-size:0.95rem;font-weight:700;text-decoration:none">
+            <i class="fas fa-home"></i> العودة للرئيسية
+        </a>
     </div>
 </div>
-
 <!-- Admin Dashboard -->
 <div id="adminDashboard" style="display:none">
 <div class="admin-layout">
@@ -610,51 +601,29 @@
     const ADMIN_EMAILS = ['sales.burjuman1@gmail.com']; // 
 
     document.addEventListener('DOMContentLoaded', () => {
-        // إخفاء كل شي ريثما نعرف حالة المستخدم
+        // إخفاء كل شي ريثما نعرف حالة المستخدم — نعرض loading
         document.getElementById('adminLoginGate').style.display = 'none';
         document.getElementById('adminDashboard').style.display = 'none';
 
         auth.onAuthStateChanged(async user => {
             if (user && ADMIN_EMAILS.includes(user.email)) {
-                // ✅ مسجل كأدمن — ادخل مباشرة بدون طلب باسوورد
+                // ✅ أدمن — ادخل مباشرة
                 showDashboard(user);
-            } else if (user) {
-                // مسجل لكن ليس أدمن — أخرجه وأظهر شاشة الدخول
-                await auth.signOut();
             } else {
-                // غير مسجل — أظهر شاشة دخول الأدمن
+                // ❌ مو أدمن أو غير مسجل — أظهر شاشة الرفض
+                if (user) await auth.signOut(); // أخرج غير الأدمن
+                const msg = document.getElementById('accessMsg');
+                if (msg) {
+                    msg.textContent = user
+                        ? 'حسابك (' + user.email + ') ليس لديه صلاحية الوصول'
+                        : 'يجب تسجيل الدخول بحساب أدمن أولاً من الصفحة الرئيسية';
+                }
                 document.getElementById('adminLoginGate').style.cssText = 'display:flex;min-height:100vh;background:#0F0F0F;align-items:center;justify-content:center';
-                document.getElementById('adminDashboard').style.display = 'none';
             }
         });
     });
 
-    async function adminLogin() {
-        const btn   = document.getElementById('adminLoginBtn');
-        const email = document.getElementById('adminEmail').value.trim();
-        const pass  = document.getElementById('adminPass').value;
-        const errEl = document.getElementById('adminLoginError');
-
-        if (!email || !pass) { errEl.style.display='block'; errEl.textContent='أدخل البريد وكلمة المرور'; return; }
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الدخول...';
-        btn.disabled = true;
-        errEl.style.display = 'none';
-
-        try {
-            const cred = await auth.signInWithEmailAndPassword(email, pass);
-            if (!ADMIN_EMAILS.includes(cred.user.email)) {
-                await auth.signOut();
-                throw { message: 'ليس لديك صلاحية الوصول لهذه اللوحة' };
-            }
-        } catch(err) {
-            btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> دخول الإدارة';
-            btn.disabled = false;
-            errEl.style.display = 'block';
-            errEl.textContent = err.message || 'بريد أو كلمة مرور غير صحيحة';
-        }
-    }
-
-    function showDashboard(user) {
+        function showDashboard(user) {
         document.getElementById('adminLoginGate').style.display = 'none';
         document.getElementById('adminDashboard').style.display = 'block';
         const initials = (user.displayName || user.email || 'A')[0].toUpperCase();
@@ -927,7 +896,7 @@
 
     // Enter key for login
     document.addEventListener('keydown', e => {
-        if (e.key==='Enter' && document.getElementById('adminLoginGate').style.display!=='none') adminLogin();
+        // Enter key listener محذوف مع adminLogin
     });
 </script>
 </body>
