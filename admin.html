@@ -566,35 +566,74 @@
 
 <!-- Modal: Add Banner -->
 <div class="modal-overlay" id="bannerModal">
-    <div class="modal-box">
-        <div class="modal-title"><i class="fas fa-bullhorn" style="color:#F59E0B;margin-left:8px"></i> إضافة بنر جديد</div>
+    <div class="modal-box" style="max-width:560px">
+        <div class="modal-title"><i class="fas fa-bullhorn" style="color:#F59E0B;margin-left:8px"></i> إضافة بنر / إعلان جديد</div>
         <div class="modal-form">
-            <div class="form-group"><label>نص البنر *</label>
-                <input type="text" id="mBannerText" placeholder="مثال: مطلوب فصيلة O- في مستشفى...">
+
+            <!-- نوع الإعلان -->
+            <div class="form-group">
+                <label>نوع الإعلان *</label>
+                <select id="mBannerType" onchange="onBannerTypeChange(this.value)" style="width:100%">
+                    <option value="urgent">🔴 طلب دم طارئ</option>
+                    <option value="hospital">🏥 إعلان مستشفى / عيادة</option>
+                    <option value="thanks">🌟 شكر وتقدير</option>
+                    <option value="info">🔵 إعلان عام</option>
+                    <option value="success">🟢 خبر إيجابي</option>
+                </select>
             </div>
+
+            <!-- صورة الإعلان -->
+            <div class="form-group" id="bannerImageGroup">
+                <label>صورة الإعلان <span style="color:#555;font-size:0.78rem">(اختياري — مستشفى، عيادة، شخص...)</span></label>
+                <div id="bannerImageUploadArea" onclick="document.getElementById('mBannerImage').click()"
+                    style="border:2px dashed #333;border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all 0.2s;background:#111"
+                    onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='#333'">
+                    <div id="bannerImagePreview" style="display:none;margin-bottom:10px">
+                        <img id="bannerPreviewImg" style="max-height:120px;border-radius:8px;object-fit:cover">
+                    </div>
+                    <div id="bannerImagePlaceholder">
+                        <i class="fas fa-cloud-upload-alt" style="font-size:1.8rem;color:#444;display:block;margin-bottom:8px"></i>
+                        <p style="color:#555;font-size:0.85rem;margin:0">اضغط لرفع صورة</p>
+                        <p style="color:#333;font-size:0.75rem;margin:4px 0 0">JPG, PNG — حجم أقصى 5MB</p>
+                    </div>
+                    <div id="bannerImageLoading" style="display:none">
+                        <i class="fas fa-spinner fa-spin" style="color:var(--red);font-size:1.5rem"></i>
+                        <p style="color:#555;font-size:0.85rem;margin:8px 0 0">جاري الرفع...</p>
+                    </div>
+                </div>
+                <input type="file" id="mBannerImage" accept="image/*" style="display:none" onchange="uploadBannerImage(this)">
+                <input type="hidden" id="mBannerImageUrl" value="">
+                <button type="button" id="removeBannerImg" style="display:none;margin-top:6px;background:none;border:none;color:#DC2626;font-size:0.8rem;cursor:pointer;font-family:Cairo,sans-serif" onclick="removeBannerImage()">
+                    <i class="fas fa-times"></i> إزالة الصورة
+                </button>
+            </div>
+
+            <!-- نص البنر -->
+            <div class="form-group">
+                <label>نص الإعلان *</label>
+                <textarea id="mBannerText" placeholder="مثال: مستشفى الإمام الحسين يعلن عن توفر دم O+ ..." rows="3"
+                    style="width:100%;padding:10px 14px;background:#111;border:1px solid #2A2A2A;border-radius:10px;font-family:Cairo,sans-serif;font-size:0.9rem;color:#ccc;outline:none;resize:vertical"></textarea>
+            </div>
+
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-                <div class="form-group"><label>نوع البنر</label>
-                    <select id="mBannerType">
-                        <option value="urgent">طارئ 🔴</option>
-                        <option value="info">إعلام 🔵</option>
-                        <option value="success">إيجابي 🟢</option>
-                    </select>
+                <div class="form-group">
+                    <label>نص الزر</label>
+                    <input type="text" id="mBannerBtn" placeholder="تواصل معنا">
                 </div>
-                <div class="form-group"><label>رابط الزر (اختياري)</label>
-                    <input type="text" id="mBannerLink" placeholder="request.html">
+                <div class="form-group">
+                    <label>رابط الزر (اختياري)</label>
+                    <input type="text" id="mBannerLink" placeholder="request.html أو رقم هاتف">
                 </div>
             </div>
-            <div class="form-group"><label>نص الزر</label>
-                <input type="text" id="mBannerBtn" placeholder="ساعد الآن">
-            </div>
+
             <div class="form-group" style="display:flex;align-items:center;gap:10px">
                 <input type="checkbox" id="mBannerActive" checked style="accent-color:var(--red);width:16px;height:16px">
                 <label style="margin:0;font-size:0.875rem;color:#aaa">نشر البنر فوراً</label>
             </div>
         </div>
         <div class="modal-actions">
-            <button class="btn-modal-cancel" onclick="closeModal('bannerModal')">إلغاء</button>
-            <button class="btn-modal-save" onclick="saveBanner()"><i class="fas fa-paper-plane"></i> نشر</button>
+            <button class="btn-modal-cancel" onclick="closeModal('bannerModal');resetBannerModal()">إلغاء</button>
+            <button class="btn-modal-save" onclick="saveBanner()"><i class="fas fa-paper-plane"></i> نشر الإعلان</button>
         </div>
     </div>
 </div>
@@ -780,28 +819,42 @@
 
     // ===== BANNERS =====
     function loadBanners() {
-        db.collection('banners').onSnapshot(snap => {
+        db.collection('banners').orderBy('createdAt','desc').onSnapshot(snap => {
             const list = document.getElementById('bannersList');
             if (snap.empty) {
                 list.innerHTML = '<p style="color:#444;text-align:center;padding:20px">لا توجد بنرات — أضف واحداً!</p>';
                 return;
             }
+            const typeLabels = {urgent:'طلب دم طارئ 🔴', hospital:'إعلان مستشفى 🏥', thanks:'شكر وتقدير 🌟', info:'إعلان عام 🔵', success:'خبر إيجابي 🟢'};
+            const colors     = {urgent:'rgba(192,21,42,0.12)', hospital:'rgba(79,70,229,0.1)', thanks:'rgba(234,179,8,0.1)', info:'rgba(79,70,229,0.1)', success:'rgba(22,163,74,0.1)'};
+            const textColors = {urgent:'var(--red-light)', hospital:'#818CF8', thanks:'#EAB308', info:'#818CF8', success:'#16A34A'};
             list.innerHTML = snap.docs.map(d => {
                 const b = d.data();
-                const colors = {urgent:'rgba(192,21,42,0.1)',info:'rgba(79,70,229,0.1)',success:'rgba(22,163,74,0.1)'};
-                const textColors = {urgent:'var(--red-light)',info:'#818CF8',success:'#16A34A'};
-                return `<div style="background:${colors[b.type]||colors.urgent};border:1px solid #2A2A2A;border-radius:10px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
-                    <div>
-                        <span style="color:${textColors[b.type]||textColors.urgent};font-weight:700;font-size:0.875rem">${b.text}</span>
-                        ${b.btnText ? `<span style="color:#555;font-size:0.78rem;margin-right:8px">← زر: "${b.btnText}"</span>` : ''}
+                const col  = colors[b.type]     || colors.urgent;
+                const tcol = textColors[b.type] || textColors.urgent;
+                const lbl  = typeLabels[b.type] || 'إعلان';
+                return `<div style="background:${col};border:1px solid #2A2A2A;border-radius:12px;padding:16px;display:flex;align-items:center;gap:14px">
+                    ${b.imageUrl ? `<img src="${b.imageUrl}" style="width:64px;height:64px;border-radius:8px;object-fit:cover;flex-shrink:0;border:1px solid #333">` : ''}
+                    <div style="flex:1;min-width:0">
+                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                            <span style="color:${tcol};font-size:0.75rem;font-weight:700;background:${col};padding:2px 8px;border-radius:50px;border:1px solid ${tcol}33">${lbl}</span>
+                            <span class="status-pill ${b.active?'status-active':'status-done'}">${b.active?'نشط':'مخفي'}</span>
+                        </div>
+                        <p style="color:#ccc;font-size:0.875rem;margin:0 0 4px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b.text}</p>
+                        ${b.btnText ? `<span style="color:#555;font-size:0.78rem">زر: "${b.btnText}"</span>` : ''}
                     </div>
-                    <div style="display:flex;align-items:center;gap:8px">
-                        <span class="status-pill ${b.active?'status-active':'status-done'}">${b.active?'نشط':'مخفي'}</span>
+                    <div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0">
                         <button class="tbl-btn tbl-btn-gray" onclick="toggleBanner('${d.id}',${b.active})">${b.active?'إخفاء':'إظهار'}</button>
                         <button class="tbl-btn tbl-btn-red" onclick="deleteDoc('banners','${d.id}')">حذف</button>
                     </div>
                 </div>`;
             }).join('');
+        }, () => {
+            // fallback بدون orderBy
+            db.collection('banners').onSnapshot(snap => {
+                if (snap.empty) { document.getElementById('bannersList').innerHTML = '<p style="color:#444;text-align:center;padding:20px">لا توجد بنرات</p>'; return; }
+                document.getElementById('bannersList').innerHTML = snap.docs.map(d => `<div style="background:#1A1A1A;border:1px solid #2A2A2A;border-radius:10px;padding:14px">${d.data().text}</div>`).join('');
+            });
         });
     }
 
@@ -850,20 +903,95 @@
         loadAdminHospitals();
     }
 
+    const IMGBB_KEY = '5f6aa85734c193cfb5d15484c21a829e';
+
+    async function uploadBannerImage(input) {
+        const file = input.files[0];
+        if (!file) return;
+        if (file.size > 5 * 1024 * 1024) return showToast('الصورة أكبر من 5MB', 'error');
+
+        document.getElementById('bannerImagePlaceholder').style.display = 'none';
+        document.getElementById('bannerImageLoading').style.display     = 'block';
+        document.getElementById('bannerImagePreview').style.display     = 'none';
+
+        try {
+            const formData = new FormData();
+            formData.append('image', file);
+            const res  = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, { method:'POST', body:formData });
+            const data = await res.json();
+            if (!data.success) throw new Error('فشل الرفع');
+
+            const url = data.data.url;
+            document.getElementById('mBannerImageUrl').value   = url;
+            document.getElementById('bannerPreviewImg').src    = url;
+            document.getElementById('bannerImagePreview').style.display  = 'block';
+            document.getElementById('bannerImageLoading').style.display  = 'none';
+            document.getElementById('bannerImagePlaceholder').style.display = 'none';
+            document.getElementById('removeBannerImg').style.display     = 'inline-block';
+            showToast('تم رفع الصورة ✓', 'success');
+        } catch(e) {
+            document.getElementById('bannerImagePlaceholder').style.display = 'block';
+            document.getElementById('bannerImageLoading').style.display     = 'none';
+            showToast('فشل رفع الصورة، حاول مرة أخرى', 'error');
+        }
+    }
+
+    function removeBannerImage() {
+        document.getElementById('mBannerImageUrl').value            = '';
+        document.getElementById('mBannerImage').value               = '';
+        document.getElementById('bannerPreviewImg').src             = '';
+        document.getElementById('bannerImagePreview').style.display = 'none';
+        document.getElementById('bannerImagePlaceholder').style.display = 'block';
+        document.getElementById('removeBannerImg').style.display    = 'none';
+    }
+
+    function onBannerTypeChange(type) {
+        const ph = {
+            urgent:   'مطلوب فصيلة O- في مستشفى الإمام الحسين — الحالة حرجة',
+            hospital: 'مستشفى السلام يعلن عن افتتاح قسم جديد للطوارئ',
+            thanks:   'شكر وتقدير للمتبرع أحمد الكعبي على تبرعه الكريم',
+            info:     'إعلان مهم لجميع المستخدمين',
+            success:  'تم إنقاذ 3 أرواح بفضل متبرعي المنصة هذا الأسبوع'
+        };
+        const btnPh = { urgent:'ساعد الآن', hospital:'تواصل مع المستشفى', thanks:'شاهد القصة', info:'اقرأ المزيد', success:'اعرف التفاصيل' };
+        document.getElementById('mBannerText').placeholder = ph[type]    || ph.info;
+        document.getElementById('mBannerBtn').placeholder  = btnPh[type] || 'اضغط هنا';
+    }
+
+    function resetBannerModal() {
+        document.getElementById('mBannerText').value     = '';
+        document.getElementById('mBannerBtn').value      = '';
+        document.getElementById('mBannerLink').value     = '';
+        document.getElementById('mBannerType').value     = 'urgent';
+        document.getElementById('mBannerActive').checked = true;
+        removeBannerImage();
+    }
+
     async function saveBanner() {
         const text = document.getElementById('mBannerText').value.trim();
-        if (!text) return showToast('يرجى إدخال نص البنر', 'error');
+        if (!text) return showToast('يرجى إدخال نص الإعلان', 'error');
+        const imageUrl    = document.getElementById('mBannerImageUrl').value;
         const bannerActive = document.getElementById('mBannerActive')?.checked ?? true;
-        await db.collection('banners').add({
-            text,
-            type:    document.getElementById('mBannerType').value || 'urgent',
-            link:    document.getElementById('mBannerLink').value || 'request.html',
-            btnText: document.getElementById('mBannerBtn').value || 'ساعد الآن',
-            active:  bannerActive,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        closeModal('bannerModal');
-        showToast('تم نشر البنر ✓', 'success');
+        const btn = document.querySelector('#bannerModal .btn-modal-save');
+        if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري النشر...'; }
+        try {
+            await db.collection('banners').add({
+                text,
+                type:     document.getElementById('mBannerType').value || 'urgent',
+                link:     document.getElementById('mBannerLink').value  || '',
+                btnText:  document.getElementById('mBannerBtn').value   || 'اعرف المزيد',
+                imageUrl: imageUrl || '',
+                active:   bannerActive,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            closeModal('bannerModal');
+            resetBannerModal();
+            showToast('تم نشر الإعلان بنجاح ✓', 'success');
+        } catch(e) {
+            showToast('حدث خطأ في النشر', 'error');
+        } finally {
+            if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> نشر الإعلان'; }
+        }
     }
 
     function getStatusPill(status, urgent) {
