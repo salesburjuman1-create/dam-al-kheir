@@ -21,6 +21,22 @@
                 <li><a href="donors.html">المتبرعون</a></li>
                 <li><a href="requests.html" class="active">طلبات الدم</a></li>
             </ul>
+            <!-- حقول المريض الإضافية -->
+<div class="form-group">
+    <label>هل يعاني المريض من أمراض مزمنة؟</label>
+    <select id="patientChronic">
+        <option value="no">لا</option>
+        <option value="yes">نعم</option>
+    </select>
+</div>
+<div class="form-group">
+    <label>هل يعاني من أمراض الدم؟ (تكسر كريات، هيموفيليا...)</label>
+    <select id="patientBloodDisease">
+        <option value="no">لا</option>
+        <option value="yes">نعم — أحدد:</option>
+    </select>
+    <input type="text" id="patientBloodDiseaseDetails" placeholder="حدد نوع المرض..." style="margin-top:8px;display:none">
+</div>
             <div class="nav-actions">
                 <a href="login.html" class="btn-outline-sm nav-login-link">دخول</a>
                 <a href="register.html" class="btn-primary-sm nav-register-link">تسجيل <i class="fas fa-arrow-left"></i></a>
