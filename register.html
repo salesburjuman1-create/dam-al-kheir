@@ -44,6 +44,21 @@
         .pass-hint { font-size: 0.75rem; color: var(--gray-400); margin-top: 4px; }
         .input-wrap { position: relative; }
         .toggle-pass { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--gray-400); padding: 0; }
+        .health-section {
+            background: var(--red-faint); border: 1px solid rgba(192,21,42,0.15);
+            border-radius: var(--radius); padding: 18px; margin-bottom: 20px;
+        }
+        .health-section .form-group select,
+        .health-section .form-group input {
+            background: white;
+        }
+        .health-details-input {
+            width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-200);
+            border-radius: var(--radius-sm); font-family: var(--font-main);
+            font-size: 0.9rem; outline: none; transition: var(--transition);
+            margin-top: 8px; background: white;
+        }
+        .health-details-input:focus { border-color: var(--red); }
     </style>
 </head>
 <body>
@@ -83,7 +98,7 @@
                     <p>انضم إلى مجتمع المتبرعين في العراق</p>
                 </div>
 
-                <!-- أزرار التسجيل السريع -->
+                <!-- تسجيل سريع بـ Google -->
                 <button class="social-register-btn google" onclick="registerWithGoogle()">
                     <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#4285F4" d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.3 0 6.3 1.2 8.6 3.3l6.3-6.3C34.9 5.1 29.8 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.5 0 20-7.5 20-21 0-1.4-.1-2.7-.5-4z"/></svg>
                     تسجيل سريع بـ Google
@@ -91,7 +106,7 @@
 
                 <div class="divider"><span>أو سجّل بالبيانات</span></div>
 
-                <!-- Step Indicator -->
+                <!-- مؤشر الخطوات -->
                 <div class="step-indicator">
                     <div class="step-dot active" id="step1-dot">١</div>
                     <div class="step-line" id="line1"></div>
@@ -100,7 +115,7 @@
                     <div class="step-dot" id="step3-dot">٣</div>
                 </div>
 
-                <!-- STEP 1: Account Type -->
+                <!-- ===== الخطوة 1: نوع الحساب ===== -->
                 <div id="step1">
                     <p style="font-weight:700;color:var(--gray-800);margin-bottom:16px;font-size:0.95rem">ما هو نوع حسابك؟</p>
                     <div class="type-selector">
@@ -120,7 +135,7 @@
                     </button>
                 </div>
 
-                <!-- STEP 2: Personal Info -->
+                <!-- ===== الخطوة 2: المعلومات الشخصية ===== -->
                 <div id="step2" style="display:none">
                     <p class="form-section-title"><i class="fas fa-user"></i> المعلومات الشخصية</p>
                     <div class="form-row">
@@ -168,8 +183,10 @@
                     </div>
                 </div>
 
-                <!-- STEP 3: Blood Type + Password -->
+                <!-- ===== الخطوة 3: فصيلة الدم + كلمة المرور ===== -->
                 <div id="step3" style="display:none">
+
+                    <!-- فصيلة الدم -->
                     <p class="form-section-title"><i class="fas fa-tint"></i> فصيلة الدم *</p>
                     <div class="blood-type-selector" style="margin-bottom:24px">
                         <button class="blood-type-btn" type="button" onclick="selectBlood(this)">A+</button>
@@ -182,6 +199,47 @@
                         <button class="blood-type-btn" type="button" onclick="selectBlood(this)">O-</button>
                     </div>
 
+                    <!-- معلومات صحية — تظهر فقط للمتبرعين -->
+                    <div id="donorHealthFields" style="display:none">
+                        <div class="health-section">
+                            <p class="form-section-title" style="margin-bottom:16px">
+                                <i class="fas fa-heart-pulse"></i> معلومات صحية للمتبرع
+                            </p>
+
+                            <div class="form-group">
+                                <label>آخر مرة تبرعت فيها بالدم <span style="color:var(--gray-400);font-weight:400">(اختياري)</span></label>
+                                <input type="date" id="lastDonationDate" style="width:100%;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-family:var(--font-main);font-size:0.9rem;outline:none;background:white">
+                                <p style="font-size:0.78rem;color:var(--gray-400);margin-top:4px">
+                                    <i class="fas fa-info-circle" style="color:var(--red)"></i>
+                                    لا يُقبل التبرع إذا كان آخر تبرع منذ أقل من 3 أشهر
+                                </p>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>هل تدخن؟</label>
+                                    <select id="isSmoker">
+                                        <option value="no">لا</option>
+                                        <option value="yes">نعم</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>هل تعاني من أمراض مزمنة؟</label>
+                                    <select id="hasChronicDisease" onchange="toggleChronicDetails(this.value)">
+                                        <option value="no">لا</option>
+                                        <option value="yes">نعم — أحدد</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div id="chronicDetailsWrap" style="display:none">
+                                <input type="text" id="chronicDiseaseDetails" class="health-details-input"
+                                    placeholder="مثال: سكري، ضغط، أمراض القلب...">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- كلمة المرور -->
                     <p class="form-section-title"><i class="fas fa-lock"></i> كلمة المرور</p>
                     <div class="form-group">
                         <label>كلمة المرور * <small style="color:var(--gray-400);font-weight:400">(٨ أحرف على الأقل)</small></label>
@@ -224,6 +282,7 @@
                 <div class="auth-switch" style="margin-top:20px">
                     لديك حساب مسبقاً؟ <a href="login.html">سجّل الدخول</a>
                 </div>
+
             </div>
         </div>
     </section>
@@ -233,8 +292,14 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
     <script src="script.js"></script>
+
     <script>
         // ===== وظائف خاصة بصفحة التسجيل =====
+
+        // إظهار/إخفاء تفاصيل الأمراض المزمنة
+        function toggleChronicDetails(val) {
+            document.getElementById('chronicDetailsWrap').style.display = val === 'yes' ? 'block' : 'none';
+        }
 
         function validateStep1() {
             const selected = document.querySelector('.type-btn.selected');
@@ -251,10 +316,10 @@
             const city      = document.getElementById('regCity').value;
             const age       = document.getElementById('regAge').value;
 
-            if (!firstName) return showToast('يرجى إدخال الاسم الأول', 'error');
+            if (!firstName)              return showToast('يرجى إدخال الاسم الأول', 'error');
             if (!phone || phone.length < 10) return showToast('يرجى إدخال رقم هاتف صحيح', 'error');
-            if (!city) return showToast('يرجى اختيار المحافظة', 'error');
-            if (!age || age < 18) return showToast('يجب أن يكون عمرك ١٨ سنة أو أكثر', 'error');
+            if (!city)                   return showToast('يرجى اختيار المحافظة', 'error');
+            if (!age || age < 18)        return showToast('يجب أن يكون عمرك ١٨ سنة أو أكثر', 'error');
 
             goToStep(3);
         }
@@ -265,24 +330,24 @@
             if (!val) { bar.style.background = 'var(--gray-200)'; bar.style.width = '0'; hint.textContent = ''; return; }
 
             let score = 0;
-            if (val.length >= 8)  score++;
-            if (val.length >= 12) score++;
-            if (/[A-Z]/.test(val)) score++;
-            if (/[0-9]/.test(val)) score++;
-            if (/[^A-Za-z0-9]/.test(val)) score++;
+            if (val.length >= 8)           score++;
+            if (val.length >= 12)          score++;
+            if (/[A-Z]/.test(val))         score++;
+            if (/[0-9]/.test(val))         score++;
+            if (/[^A-Za-z0-9]/.test(val))  score++;
 
             const levels = [
                 { color: '#DC2626', label: 'ضعيفة جداً', w: '20%' },
-                { color: '#EA580C', label: 'ضعيفة', w: '40%' },
-                { color: '#D97706', label: 'متوسطة', w: '60%' },
-                { color: '#16A34A', label: 'قوية', w: '80%' },
+                { color: '#EA580C', label: 'ضعيفة',      w: '40%' },
+                { color: '#D97706', label: 'متوسطة',     w: '60%' },
+                { color: '#16A34A', label: 'قوية',        w: '80%' },
                 { color: '#15803D', label: 'قوية جداً ✓', w: '100%' },
             ];
             const lvl = levels[Math.min(score - 1, 4)] || levels[0];
             bar.style.background = lvl.color;
-            bar.style.width = lvl.w;
-            hint.textContent = 'القوة: ' + lvl.label;
-            hint.style.color = lvl.color;
+            bar.style.width      = lvl.w;
+            hint.textContent     = 'القوة: ' + lvl.label;
+            hint.style.color     = lvl.color;
         }
 
         function togglePassField(inputId, iconId) {
@@ -299,25 +364,23 @@
                 const result   = await auth.signInWithPopup(provider);
                 const user     = result.user;
 
-                // حفظ البيانات إذا مستخدم جديد
                 if (result.additionalUserInfo?.isNewUser) {
                     await db.collection('users').doc(user.uid).set({
-                        name:      user.displayName || '',
-                        firstName: user.displayName?.split(' ')[0] || '',
-                        lastName:  user.displayName?.split(' ').slice(1).join(' ') || '',
-                        phone:     user.phoneNumber || '',
-                        email:     user.email || '',
-                        role:      'donor',
-                        available: true,
+                        name:           user.displayName || '',
+                        firstName:      user.displayName?.split(' ')[0] || '',
+                        lastName:       user.displayName?.split(' ').slice(1).join(' ') || '',
+                        phone:          user.phoneNumber || '',
+                        email:          user.email || '',
+                        role:           'donor',
+                        available:      true,
                         totalDonations: 0,
-                        bloodType: '',   // سيكمل من ملف التعريف
-                        city:      '',
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        bloodType:      '',
+                        city:           '',
+                        createdAt:      firebase.firestore.FieldValue.serverTimestamp()
                     });
                 }
 
                 showToast('تم تسجيل الدخول بـ Google! 🎉', 'success');
-                // إذا مستخدم جديد اذهب لإكمال الملف، وإلا للرئيسية
                 const dest = result.additionalUserInfo?.isNewUser ? 'complete-profile.html' : 'index.html';
                 setTimeout(() => window.location.href = dest, 1200);
 
@@ -330,18 +393,7 @@
                 }
             }
         }
-    </script>
 
-    <script>
-        // إذا مسجل دخول بالفعل — لا حاجة للتسجيل
-        if (typeof auth !== 'undefined') {
-            auth.onAuthStateChanged(user => {
-                if (user) window.location.href = 'index.html';
-            });
-        }
-    </script>
-
-    <script>
         // إذا مسجل دخول بالفعل — اذهب للرئيسية
         if (typeof auth !== 'undefined') {
             auth.onAuthStateChanged(user => {
