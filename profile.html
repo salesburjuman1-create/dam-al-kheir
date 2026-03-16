@@ -226,6 +226,7 @@
                 for (let opt of document.getElementById('editCity').options) {
                     if (opt.value === d.city) { opt.selected = true; break; }
                 }
+                loadMyDonations(user.uid)
                 if (d.bloodType) {
                     document.querySelectorAll('.blood-type-btn').forEach(btn => {
                         if (btn.textContent.trim() === d.bloodType) btn.classList.add('selected');
@@ -271,6 +272,31 @@
             }
         }
 
+        async function loadMyDonations(uid) {
+    const list = document.getElementById('myDonationsList');
+    try {
+        const snap = await db.collection('donations')
+            .where('userId','==',uid).orderBy('date','desc').limit(10).get();
+        if (snap.empty) {
+            list.innerHTML = '<p style="text-align:center;color:var(--gray-400);font-size:0.875rem;padding:16px">لم تُسجَّل تبرعات بعد</p>';
+            return;
+        }
+        list.innerHTML = snap.docs.map(d => {
+            const r = d.data();
+            return `<div class="my-req-item">
+                <div class="my-req-blood" style="background:#16A34A">${r.bloodType||'؟'}</div>
+                <div class="my-req-info" style="flex:1">
+                    <h4>${r.hospital||'—'} — ${r.city||''}</h4>
+                    <span>${r.date ? new Date(r.date.seconds*1000).toLocaleDateString('ar-IQ') : '—'}</span>
+                </div>
+                <span style="padding:4px 12px;background:#DCFCE7;color:#16A34A;border-radius:50px;font-size:0.75rem;font-weight:700">مكتمل</span>
+            </div>`;
+        }).join('');
+    } catch(e) {
+        list.innerHTML = '<p style="color:var(--gray-400);font-size:0.82rem;padding:12px">لا توجد سجلات تبرع</p>';
+    }
+}
+
         async function saveProfile() {
             const btn = document.querySelector('.section-card .btn-submit');
             const firstName = document.getElementById('editFirstName').value.trim();
@@ -301,7 +327,8 @@
                 document.getElementById('pCity').textContent  = city || '—';
                 document.getElementById('pPhone').textContent = phone;
                 hideLoading(btn);
-                showToast('تم حفظ التغييرات بنجاح ✓', 'success');
+               showToast('تم حفظ التغييرات بنجاح ✓', 'success');
+setTimeout(() => window.location.href = 'index.html', 1500);
             } catch(e) {
                 hideLoading(btn);
                 showToast('حدث خطأ في الحفظ', 'error');
