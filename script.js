@@ -291,9 +291,11 @@ function loadRequests(containerId, limitCount=20, urgentOnly=false) {
     container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--gray-400)"><i class="fas fa-spinner fa-spin fa-2x"></i><p style="margin-top:12px">جاري التحميل...</p></div>';
     let q = db.collection('blood_requests').where('status','==','active').orderBy('createdAt','desc').limit(limitCount);
     if (urgentOnly) q = db.collection('blood_requests').where('status','==','active').where('urgent','==',true).orderBy('createdAt','desc').limit(limitCount);
-    q.onSnapshot(snap => {
-        const countEl = document.getElementById('requestsCount');
-        if (countEl) countEl.textContent = snap.size;
+   q.onSnapshot(snap => {
+    _allRequests = snap.docs.map(doc => ({id:doc.id,...doc.data()}));
+    const countEl = document.getElementById('requestsCount');
+    if (countEl) countEl.textContent = _allRequests.length;
+    renderFilteredRequests();
         if (snap.empty) {
             container.innerHTML = '<div style="text-align:center;padding:60px;color:var(--gray-400)"><i class="fas fa-heartbeat fa-3x" style="margin-bottom:16px;display:block"></i><p>لا توجد طلبات نشطة حالياً</p></div>';
             return;
@@ -311,6 +313,33 @@ function loadRequests(containerId, limitCount=20, urgentOnly=false) {
             container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--red)"><i class="fas fa-exclamation-triangle fa-2x"></i><p style="margin-top:12px">خطأ في التحميل</p></div>';
         }
     });
+}
+function filterRequests() {
+    const search  = document.getElementById('reqSearch')?.value?.toLowerCase()||'';
+    const blood   = document.getElementById('reqBloodFilter')?.value||'';
+    const city    = document.getElementById('reqCityFilter')?.value||'';
+    const urgency = document.getElementById('reqUrgencyFilter')?.value||'';
+    const filtered = _allRequests.filter(r =>
+        (!search  || r.hospital?.includes(search) || r.city?.includes(search)) &&
+        (!blood   || r.bloodType === blood) &&
+        (!city    || r.city === city) &&
+        (!urgency || (urgency==='urgent' ? r.urgent : !r.urgent))
+    );
+    const countEl = document.getElementById('requestsCount');
+    if (countEl) countEl.textContent = filtered.length;
+    const container = document.getElementById('full-requests-list');
+    if (container) container.innerHTML = filtered.length
+        ? filtered.map(renderRequestCard).join('')
+        : '<div style="text-align:center;padding:60px;color:var(--gray-400)">لا توجد نتائج</div>';
+}
+function renderFilteredRequests() {
+    const container = document.getElementById('full-requests-list');
+    if (!container) return;
+    if (_allRequests.length === 0) {
+        container.innerHTML = '<div style="text-align:center;padding:60px;color:var(--gray-400)"><i class="fas fa-heartbeat fa-3x" style="margin-bottom:16px;display:block"></i><p>لا توجد طلبات نشطة حالياً</p></div>';
+        return;
+    }
+    container.innerHTML = _allRequests.map(renderRequestCard).join('');
 }
 
 // =============================================
