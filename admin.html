@@ -270,6 +270,10 @@
             <button class="sidebar-link" onclick="showTab('users')">
                 <i class="fas fa-user-circle"></i> المستخدمون
             </button>
+            <button class="sidebar-link" onclick="showTab('admins')">
+                <i class="fas fa-shield-alt"></i> إدارة الأدمنز
+                <span class="badge-count" id="adminsCount" style="background:#F59E0B">0</span>
+            </button>
 
             <div class="nav-group-label">الإعدادات</div>
             <button class="sidebar-link" onclick="showTab('banners')">
@@ -453,16 +457,98 @@
                 <div class="admin-section">
                     <div class="admin-section-header">
                         <h3><i class="fas fa-user-circle" style="color:#F59E0B;margin-left:8px"></i> المستخدمون المسجلون</h3>
+                        <div style="display:flex;gap:8px;align-items:center">
+                            <input type="search" id="usersSearch" placeholder="🔍 بحث بالاسم أو الهاتف..." oninput="filterUsersTable()"
+                                style="padding:8px 14px;background:#111;border:1px solid #2A2A2A;border-radius:8px;font-family:Cairo,sans-serif;color:#ccc;outline:none;font-size:0.85rem;width:220px">
+                            <select id="usersRoleFilter" onchange="filterUsersTable()"
+                                style="padding:8px 12px;background:#111;border:1px solid #2A2A2A;border-radius:8px;font-family:Cairo,sans-serif;color:#ccc;outline:none;font-size:0.85rem">
+                                <option value="">الكل</option>
+                                <option value="donor">متبرعون</option>
+                                <option value="patient">محتاجون</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="admin-section-body">
                         <table class="admin-table">
                             <thead>
-                                <tr><th>الاسم</th><th>الهاتف</th><th>المحافظة</th><th>النوع</th><th>تاريخ التسجيل</th><th>إجراء</th></tr>
+                                <tr><th>الصورة</th><th>الاسم</th><th>الهاتف</th><th>المحافظة</th><th>فصيلة الدم</th><th>النوع</th><th>التبرعات</th><th>تاريخ التسجيل</th><th>إجراءات</th></tr>
                             </thead>
                             <tbody id="usersTbody">
-                                <tr><td colspan="6" style="text-align:center;padding:30px;color:#444"><i class="fas fa-spinner fa-spin"></i></td></tr>
+                                <tr><td colspan="9" style="text-align:center;padding:30px;color:#444"><i class="fas fa-spinner fa-spin"></i></td></tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== ADMINS TAB ===== -->
+            <div id="tab-admins" class="content-tabs">
+                <div class="admin-section" style="margin-bottom:20px">
+                    <div class="admin-section-header">
+                        <h3><i class="fas fa-shield-alt" style="color:#F59E0B;margin-left:8px"></i> إدارة الأدمنز والصلاحيات</h3>
+                        <button class="tbl-btn tbl-btn-green" onclick="openAddAdminModal()">
+                            <i class="fas fa-plus"></i> إضافة أدمن جديد
+                        </button>
+                    </div>
+                    <div class="admin-section-body" style="padding:20px">
+
+                        <!-- الأدمن الرئيسي -->
+                        <div style="background:rgba(192,21,42,0.1);border:1px solid rgba(192,21,42,0.3);border-radius:10px;padding:16px;margin-bottom:20px;display:flex;align-items:center;gap:14px">
+                            <div style="width:42px;height:42px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:900;color:white;flex-shrink:0">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <div style="flex:1">
+                                <div style="color:white;font-weight:700;font-size:0.9rem">الأدمن الرئيسي</div>
+                                <div style="color:#666;font-size:0.8rem" id="superAdminEmail">sales.burjuman1@gmail.com</div>
+                            </div>
+                            <span style="background:rgba(192,21,42,0.2);color:var(--red-light);padding:3px 12px;border-radius:50px;font-size:0.75rem;font-weight:700">صلاحيات كاملة</span>
+                        </div>
+
+                        <!-- قائمة الأدمنز -->
+                        <div id="adminsList" style="display:flex;flex-direction:column;gap:10px">
+                            <div style="text-align:center;padding:30px;color:#444"><i class="fas fa-spinner fa-spin"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- جدول صلاحيات الأدمنز -->
+                <div class="admin-section">
+                    <div class="admin-section-header">
+                        <h3 style="font-size:0.9rem"><i class="fas fa-info-circle" style="color:#888;margin-left:8px"></i> شرح مستويات الصلاحيات</h3>
+                    </div>
+                    <div class="admin-section-body" style="padding:20px">
+                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+                            <div style="background:#111;border:1px solid #2A2A2A;border-radius:10px;padding:14px">
+                                <div style="color:#F59E0B;font-weight:700;margin-bottom:8px;font-size:0.85rem"><i class="fas fa-crown"></i> أدمن كامل</div>
+                                <ul style="color:#555;font-size:0.78rem;list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:4px">
+                                    <li>✅ إدارة كل البيانات</li>
+                                    <li>✅ حذف المستخدمين</li>
+                                    <li>✅ نشر البنرات</li>
+                                    <li>✅ إضافة مستشفيات</li>
+                                    <li>✅ إدارة الأدمنز</li>
+                                </ul>
+                            </div>
+                            <div style="background:#111;border:1px solid #2A2A2A;border-radius:10px;padding:14px">
+                                <div style="color:#818CF8;font-weight:700;margin-bottom:8px;font-size:0.85rem"><i class="fas fa-user-shield"></i> أدمن محدود</div>
+                                <ul style="color:#555;font-size:0.78rem;list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:4px">
+                                    <li>✅ إدارة الطلبات</li>
+                                    <li>✅ إدارة المتبرعين</li>
+                                    <li>✅ نشر البنرات</li>
+                                    <li>❌ حذف مستخدمين</li>
+                                    <li>❌ إدارة الأدمنز</li>
+                                </ul>
+                            </div>
+                            <div style="background:#111;border:1px solid #2A2A2A;border-radius:10px;padding:14px">
+                                <div style="color:#16A34A;font-weight:700;margin-bottom:8px;font-size:0.85rem"><i class="fas fa-eye"></i> مشاهد فقط</div>
+                                <ul style="color:#555;font-size:0.78rem;list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:4px">
+                                    <li>✅ عرض كل البيانات</li>
+                                    <li>❌ لا يمكنه التعديل</li>
+                                    <li>❌ لا يمكنه الحذف</li>
+                                    <li>❌ لا ينشر بنرات</li>
+                                    <li>❌ لا يضيف أدمنز</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -560,6 +646,41 @@
         <div class="modal-actions">
             <button class="btn-modal-cancel" onclick="closeModal('hospitalModal')">إلغاء</button>
             <button class="btn-modal-save" onclick="saveHospital()"><i class="fas fa-save"></i> حفظ</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Add Admin -->
+<div class="modal-overlay" id="addAdminModal">
+    <div class="modal-box" style="max-width:480px">
+        <div class="modal-title"><i class="fas fa-shield-alt" style="color:#F59E0B;margin-left:8px"></i> إضافة أدمن جديد</div>
+        <div class="modal-form">
+            <div class="form-group">
+                <label>البريد الإلكتروني *</label>
+                <input type="email" id="newAdminEmail" placeholder="example@gmail.com">
+            </div>
+            <div class="form-group">
+                <label>الاسم (اختياري)</label>
+                <input type="text" id="newAdminName" placeholder="اسم الأدمن">
+            </div>
+            <div class="form-group">
+                <label>مستوى الصلاحية *</label>
+                <select id="newAdminRole">
+                    <option value="full">👑 أدمن كامل — كل الصلاحيات</option>
+                    <option value="limited">🛡️ أدمن محدود — بدون حذف وإدارة أدمنز</option>
+                    <option value="viewer">👁️ مشاهد فقط — قراءة بدون تعديل</option>
+                </select>
+            </div>
+            <div style="background:#111;border:1px solid #2A2A2A;border-radius:8px;padding:12px;margin-top:4px">
+                <p style="color:#555;font-size:0.78rem;margin:0;line-height:1.7">
+                    <i class="fas fa-info-circle" style="color:#F59E0B;margin-left:6px"></i>
+                    سيتم إضافة الأدمن في Firestore. عليه تسجيل الدخول بهذا البريد عبر Google أو إنشاء حساب في Firebase Auth ليتمكن من الوصول.
+                </p>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-modal-cancel" onclick="closeModal('addAdminModal')">إلغاء</button>
+            <button class="btn-modal-save" onclick="saveNewAdmin()"><i class="fas fa-plus"></i> إضافة الأدمن</button>
         </div>
     </div>
 </div>
@@ -689,7 +810,7 @@
     }
 
     // ===== TABS =====
-    const tabTitles = { overview:'نظرة عامة', requests:'طلبات الدم', donors:'المتبرعون', hospitals:'المستشفيات', users:'المستخدمون', banners:'البنرات الإعلانية', settings:'الإعدادات' };
+    const tabTitles = { overview:'نظرة عامة', requests:'طلبات الدم', donors:'المتبرعون', hospitals:'المستشفيات', users:'المستخدمون', admins:'إدارة الأدمنز', banners:'البنرات الإعلانية', settings:'الإعدادات' };
 
     function showTab(name) {
         document.querySelectorAll('.content-tabs').forEach(t => t.classList.remove('active'));
@@ -698,7 +819,7 @@
         document.getElementById('topbarTitle').textContent = tabTitles[name] || name;
         event?.target?.classList.add('active');
         // Load data for tab
-        const loaders = { requests: loadAdminRequests, donors: loadAdminDonors, hospitals: loadAdminHospitals, users: loadAdminUsers, banners: loadBanners };
+        const loaders = { requests: loadAdminRequests, donors: loadAdminDonors, hospitals: loadAdminHospitals, users: loadAdminUsers, admins: loadAdmins, banners: loadBanners };
         if (loaders[name]) loaders[name]();
     }
 
@@ -802,19 +923,67 @@
     }
 
     // ===== USERS =====
+    let _allUsers = [];
     function loadAdminUsers() {
-        db.collection('users').orderBy('createdAt','desc').limit(100).onSnapshot(snap => {
-            document.getElementById('usersTbody').innerHTML = snap.docs.map(d => {
-                const r = d.data();
-                return `<tr>
-                    <td class="td-name">${r.name||'—'}</td>
-                    <td>${r.phone||'—'}</td><td>${r.city||'—'}</td>
-                    <td><span class="status-pill ${r.role==='donor'?'status-active':'status-pending'}">${r.role==='donor'?'متبرع':'محتاج دم'}</span></td>
-                    <td>${r.createdAt ? formatArabicTime(r.createdAt) : '—'}</td>
-                    <td><button class="tbl-btn tbl-btn-red" onclick="deleteDoc('users','${d.id}')">حذف</button></td>
-                </tr>`;
-            }).join('') || '<tr><td colspan="6" style="text-align:center;color:#444;padding:20px">لا يوجد مستخدمون</td></tr>';
+        db.collection('users').limit(200).onSnapshot(snap => {
+            _allUsers = snap.docs.map(d => ({id:d.id, ...d.data()}));
+            renderUsersTable(_allUsers);
+        }, () => {
+            db.collection('users').limit(200).get().then(snap => {
+                _allUsers = snap.docs.map(d => ({id:d.id, ...d.data()}));
+                renderUsersTable(_allUsers);
+            });
         });
+    }
+
+    function renderUsersTable(list) {
+        const empty = '<tr><td colspan="9" style="text-align:center;color:#444;padding:20px">لا يوجد مستخدمون</td></tr>';
+        document.getElementById('usersTbody').innerHTML = list.length ? list.map(r => `<tr>
+            <td>
+                ${r.photoURL
+                    ? `<img src="${r.photoURL}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;border:1px solid #333">`
+                    : `<div style="width:34px;height:34px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:0.85rem">${(r.name||'؟')[0]}</div>`}
+            </td>
+            <td class="td-name">${r.name||'—'}</td>
+            <td>${r.phone||'—'}</td>
+            <td>${r.city||'—'}</td>
+            <td><span style="background:rgba(192,21,42,0.15);color:var(--red-light);padding:2px 8px;border-radius:50px;font-size:0.78rem;font-weight:700">${r.bloodType||'—'}</span></td>
+            <td><span class="status-pill ${r.role==='donor'?'status-active':'status-pending'}">${r.role==='donor'?'متبرع':'محتاج دم'}</span></td>
+            <td style="text-align:center">${r.totalDonations||0}</td>
+            <td>${r.createdAt ? formatArabicTime(r.createdAt) : '—'}</td>
+            <td style="display:flex;gap:4px">
+                <button class="tbl-btn tbl-btn-gray" onclick="viewUserDetails('${r.id}')" title="التفاصيل"><i class="fas fa-eye"></i></button>
+                <button class="tbl-btn tbl-btn-red" onclick="deleteDoc('users','${r.id}')" title="حذف"><i class="fas fa-trash"></i></button>
+            </td>
+        </tr>`).join('') : empty;
+    }
+
+    function filterUsersTable() {
+        const search = document.getElementById('usersSearch')?.value?.toLowerCase()||'';
+        const role   = document.getElementById('usersRoleFilter')?.value||'';
+        const filtered = _allUsers.filter(u =>
+            (!search || (u.name||'').toLowerCase().includes(search) || (u.phone||'').includes(search)) &&
+            (!role   || u.role === role)
+        );
+        renderUsersTable(filtered);
+    }
+
+    function viewUserDetails(uid) {
+        const u = _allUsers.find(x => x.id === uid);
+        if (!u) return;
+        const info = [
+            `الاسم: ${u.name||'—'}`,
+            `الهاتف: ${u.phone||'—'}`,
+            `البريد: ${u.email||'—'}`,
+            `المحافظة: ${u.city||'—'}`,
+            `فصيلة الدم: ${u.bloodType||'—'}`,
+            `النوع: ${u.role==='donor'?'متبرع':'محتاج دم'}`,
+            `التبرعات: ${u.totalDonations||0}`,
+            `مدخن: ${u.isSmoker?'نعم':'لا'}`,
+            `أمراض مزمنة: ${u.hasChronicDisease?'نعم':'لا'}`,
+            u.chronicDiseaseDetails ? `تفاصيل: ${u.chronicDiseaseDetails}` : null,
+        ].filter(Boolean).join('\n');
+        alert(info);
     }
 
     // ===== BANNERS =====
@@ -1026,6 +1195,109 @@
             loadAdminHospitals();
         } catch(e) {
             showToast('خطأ: ' + e.message, 'error');
+        }
+    }
+
+    // ===== ADMINS MANAGEMENT =====
+    function loadAdmins() {
+        db.collection('admins').onSnapshot(snap => {
+            const list = document.getElementById('adminsList');
+            const count = snap.size;
+            document.getElementById('adminsCount').textContent = count;
+            if (snap.empty) {
+                list.innerHTML = '<p style="color:#444;text-align:center;padding:20px;font-size:0.875rem">لا يوجد أدمنز مضافون — أضف أدمن جديد</p>';
+                return;
+            }
+            const roleLabels = { full:'👑 أدمن كامل', limited:'🛡️ أدمن محدود', viewer:'👁️ مشاهد فقط' };
+            const roleColors = { full:'rgba(192,21,42,0.15)', limited:'rgba(79,70,229,0.15)', viewer:'rgba(22,163,74,0.15)' };
+            const roleText   = { full:'var(--red-light)', limited:'#818CF8', viewer:'#16A34A' };
+            list.innerHTML = snap.docs.map(d => {
+                const a = d.data();
+                const rc = roleColors[a.role]||roleColors.limited;
+                const rt = roleText[a.role]  ||roleText.limited;
+                const rl = roleLabels[a.role] ||'أدمن';
+                return `<div style="background:#141414;border:1px solid #2A2A2A;border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:14px">
+                    <div style="width:40px;height:40px;background:${rc};border:1px solid ${rt}33;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0">
+                        <i class="fas fa-user-shield" style="color:${rt}"></i>
+                    </div>
+                    <div style="flex:1">
+                        <div style="color:white;font-weight:700;font-size:0.875rem">${a.name||'أدمن'}</div>
+                        <div style="color:#555;font-size:0.78rem">${a.email||'—'}</div>
+                    </div>
+                    <span style="background:${rc};color:${rt};padding:3px 12px;border-radius:50px;font-size:0.75rem;font-weight:700">${rl}</span>
+                    <div style="display:flex;gap:6px">
+                        <select onchange="changeAdminRole('${d.id}',this.value)"
+                            style="padding:5px 8px;background:#111;border:1px solid #2A2A2A;border-radius:6px;font-family:Cairo,sans-serif;color:#888;font-size:0.75rem;outline:none">
+                            <option value="full"  ${a.role==='full'   ?'selected':''}>كامل</option>
+                            <option value="limited" ${a.role==='limited'?'selected':''}>محدود</option>
+                            <option value="viewer" ${a.role==='viewer' ?'selected':''}>مشاهد</option>
+                        </select>
+                        <button class="tbl-btn tbl-btn-red" onclick="removeAdmin('${d.id}','${a.email||''}')">
+                            <i class="fas fa-user-minus"></i> إزالة
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
+        }, () => {
+            document.getElementById('adminsList').innerHTML = '<p style="color:#444;text-align:center;padding:20px">تعذر تحميل الأدمنز</p>';
+        });
+    }
+
+    function openAddAdminModal() {
+        document.getElementById('newAdminEmail').value = '';
+        document.getElementById('newAdminName').value  = '';
+        document.getElementById('newAdminRole').value  = 'full';
+        document.getElementById('addAdminModal').classList.add('open');
+    }
+
+    async function saveNewAdmin() {
+        const email = document.getElementById('newAdminEmail').value.trim().toLowerCase();
+        const name  = document.getElementById('newAdminName').value.trim();
+        const role  = document.getElementById('newAdminRole').value;
+        if (!email || !email.includes('@')) return showToast('يرجى إدخال بريد إلكتروني صحيح', 'error');
+
+        // منع إضافة الأدمن الرئيسي
+        if (email === 'sales.burjuman1@gmail.com') return showToast('هذا الأدمن الرئيسي — موجود بالفعل', 'error');
+
+        const btn = document.querySelector('#addAdminModal .btn-modal-save');
+        if (btn) { btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> جاري الإضافة...'; }
+        try {
+            // تحقق إذا موجود مسبقاً
+            const existing = await db.collection('admins').where('email','==',email).get();
+            if (!existing.empty) {
+                showToast('هذا البريد مضاف مسبقاً كأدمن', 'error');
+                return;
+            }
+            await db.collection('admins').add({
+                email, name: name || email.split('@')[0],
+                role, addedBy: 'sales.burjuman1@gmail.com',
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            closeModal('addAdminModal');
+            showToast(`تم إضافة الأدمن ${email} بنجاح ✓`, 'success');
+        } catch(e) {
+            showToast('حدث خطأ في الإضافة: ' + e.message, 'error');
+        } finally {
+            if (btn) { btn.disabled=false; btn.innerHTML='<i class="fas fa-plus"></i> إضافة الأدمن'; }
+        }
+    }
+
+    async function changeAdminRole(docId, newRole) {
+        try {
+            await db.collection('admins').doc(docId).update({ role: newRole });
+            showToast('تم تغيير الصلاحية ✓', 'success');
+        } catch(e) {
+            showToast('حدث خطأ', 'error');
+        }
+    }
+
+    async function removeAdmin(docId, email) {
+        if (!confirm(`هل تريد إزالة الأدمن "${email}" ؟`)) return;
+        try {
+            await db.collection('admins').doc(docId).delete();
+            showToast('تم إزالة الأدمن', 'info');
+        } catch(e) {
+            showToast('حدث خطأ في الإزالة', 'error');
         }
     }
 
