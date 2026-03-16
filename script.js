@@ -207,7 +207,28 @@ async function handleRegister(e) {
     if (pass.length < 8) return showToast('كلمة المرور ٨ أحرف على الأقل', 'error');
     if (pass !== passConf) return showToast('كلمات المرور غير متطابقة ❌', 'error');
     if (!terms)          return showToast('يرجى الموافقة على الشروط', 'error');
+const lastDonation = document.getElementById('lastDonationDate')?.value || null;
+const isSmoker = document.getElementById('isSmoker')?.value === 'yes';
+const hasChronicDisease = document.getElementById('hasChronicDisease')?.value === 'yes';
 
+// تحقق من فترة 3 أشهر
+if (lastDonation) {
+    const lastDate = new Date(lastDonation);
+    const monthsDiff = (new Date() - lastDate) / (1000*60*60*24*30);
+    if (monthsDiff < 3) {
+        return showToast('⚠️ لا يمكن التبرع قبل مرور 3 أشهر من آخر تبرع', 'error');
+    }
+}
+
+// أضفها للـ userData:
+const userData = {
+    ...
+    lastDonation: lastDonation || null,
+    isSmoker,
+    hasChronicDisease,
+    chronicDiseaseDetails: document.getElementById('chronicDiseaseDetails')?.value || '',
+    ...
+};
     showLoading(btn, 'جاري الإنشاء...');
     try {
         const cred = await auth.createUserWithEmailAndPassword(phoneToEmail(phone), pass);
