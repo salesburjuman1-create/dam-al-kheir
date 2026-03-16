@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل جديد — دم الخير</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .auth-card { max-width: 560px; }
+        .type-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+        .type-btn {
+            padding: 18px; border: 2px solid var(--gray-200);
+            border-radius: var(--radius); background: white;
+            font-family: var(--font-main); cursor: pointer;
+            transition: var(--transition); text-align: center;
+        }
+        .type-btn i { font-size: 1.8rem; display: block; margin-bottom: 8px; color: var(--gray-400); }
+        .type-btn span { font-size: 0.9rem; font-weight: 700; color: var(--gray-600); display: block; }
+        .type-btn small { font-size: 0.75rem; color: var(--gray-400); }
+        .type-btn.selected { border-color: var(--red); background: var(--red-faint); }
+        .type-btn.selected i, .type-btn.selected span { color: var(--red); }
+        .step-indicator { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 32px; }
+        .step-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; background: var(--gray-200); color: var(--gray-600); transition: var(--transition); }
+        .step-dot.active { background: var(--red); color: white; }
+        .step-dot.done { background: #16A34A; color: white; }
+        .step-line { flex: 1; height: 2px; background: var(--gray-200); max-width: 60px; }
+        .step-line.done { background: #16A34A; }
+        .social-register-btn {
+            width: 100%; padding: 13px; border-radius: 50px;
+            font-family: var(--font-main); font-size: 0.9rem; font-weight: 700;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            gap: 10px; transition: var(--transition); border: 2px solid var(--gray-200);
+            background: white; color: var(--gray-800); margin-bottom: 12px;
+        }
+        .social-register-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+        .social-register-btn.google:hover { border-color: #4285F4; }
+        .divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
+        .divider::before, .divider::after { content:''; flex:1; height:1px; background:var(--gray-200); }
+        .divider span { font-size: 0.8rem; color: var(--gray-400); }
+        .pass-strength { height: 4px; border-radius: 2px; margin-top: 6px; transition: all 0.3s; background: var(--gray-200); }
+        .pass-hint { font-size: 0.75rem; color: var(--gray-400); margin-top: 4px; }
+        .input-wrap { position: relative; }
+        .toggle-pass { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--gray-400); padding: 0; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i class="fas fa-droplet"></i></div>
+                <span class="logo-text">دم <strong>الخير</strong></span>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="donors.html">المتبرعون</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="login.html" class="btn-outline-sm nav-login-link">دخول</a>
+                <a href="register.html" class="btn-primary-sm nav-register-link" style="background:var(--red-dark)">تسجيل</a>
+                <a href="profile.html" class="btn-primary-sm nav-dash-link" style="display:none">
+                    <i class="fas fa-user-circle"></i> <span id="navUserName">حسابي</span>
+                </a>
+                <a href="admin.html" class="btn-outline-sm nav-admin-link" style="display:none;border-color:#C0152A;color:#C0152A;gap:6px">
+                    <i class="fas fa-shield-alt"></i> الإدارة
+                </a>
+            </div>
+            <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <section class="auth-page" style="padding: 48px 0;">
+        <div class="container">
+            <div class="auth-card fade-in">
+                <div class="auth-header">
+                    <div class="auth-logo">
+                        <div class="logo-icon"><i class="fas fa-droplet"></i></div>
+                        <span class="logo-text">دم <strong>الخير</strong></span>
+                    </div>
+                    <h2>إنشاء حساب جديد</h2>
+                    <p>انضم إلى مجتمع المتبرعين في العراق</p>
+                </div>
+
+                <!-- أزرار التسجيل السريع -->
+                <button class="social-register-btn google" onclick="registerWithGoogle()">
+                    <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#4285F4" d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.3 0 6.3 1.2 8.6 3.3l6.3-6.3C34.9 5.1 29.8 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.5 0 20-7.5 20-21 0-1.4-.1-2.7-.5-4z"/></svg>
+                    تسجيل سريع بـ Google
+                </button>
+
+                <div class="divider"><span>أو سجّل بالبيانات</span></div>
+
+                <!-- Step Indicator -->
+                <div class="step-indicator">
+                    <div class="step-dot active" id="step1-dot">١</div>
+                    <div class="step-line" id="line1"></div>
+                    <div class="step-dot" id="step2-dot">٢</div>
+                    <div class="step-line" id="line2"></div>
+                    <div class="step-dot" id="step3-dot">٣</div>
+                </div>
+
+                <!-- STEP 1: Account Type -->
+                <div id="step1">
+                    <p style="font-weight:700;color:var(--gray-800);margin-bottom:16px;font-size:0.95rem">ما هو نوع حسابك؟</p>
+                    <div class="type-selector">
+                        <button class="type-btn" id="btn-donor" onclick="selectType('donor')" data-type="donor">
+                            <i class="fas fa-hand-holding-heart"></i>
+                            <span>متبرع</span>
+                            <small>أريد التبرع بالدم</small>
+                        </button>
+                        <button class="type-btn" id="btn-patient" onclick="selectType('patient')" data-type="patient">
+                            <i class="fas fa-hospital-user"></i>
+                            <span>محتاج دم</span>
+                            <small>أريد طلب دم</small>
+                        </button>
+                    </div>
+                    <button class="btn-submit" onclick="validateStep1()" style="margin-top:8px">
+                        التالي <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
+
+                <!-- STEP 2: Personal Info -->
+                <div id="step2" style="display:none">
+                    <p class="form-section-title"><i class="fas fa-user"></i> المعلومات الشخصية</p>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>الاسم الأول *</label>
+                            <input type="text" id="firstName" placeholder="محمد">
+                        </div>
+                        <div class="form-group">
+                            <label>اسم العائلة *</label>
+                            <input type="text" id="lastName" placeholder="الحسيني">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>رقم الهاتف *</label>
+                        <input type="tel" id="regPhone" placeholder="07XX-XXX-XXXX">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>المحافظة *</label>
+                            <select id="regCity">
+                                <option value="">اختر...</option>
+                                <option>بغداد</option><option>البصرة</option>
+                                <option>الموصل</option><option>أربيل</option>
+                                <option>كربلاء</option><option>النجف</option>
+                                <option>الأنبار</option><option>ديالى</option>
+                                <option>كركوك</option><option>ذي قار</option>
+                                <option>ميسان</option><option>المثنى</option>
+                                <option>القادسية</option><option>واسط</option>
+                                <option>بابل</option><option>صلاح الدين</option>
+                                <option>السليمانية</option><option>دهوك</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>العمر *</label>
+                            <input type="number" id="regAge" placeholder="25" min="18" max="65">
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:12px">
+                        <button class="btn-submit" style="background:var(--gray-200);color:var(--gray-800);box-shadow:none" onclick="goToStep(1)">
+                            <i class="fas fa-arrow-right"></i> رجوع
+                        </button>
+                        <button class="btn-submit" onclick="validateStep2()">
+                            التالي <i class="fas fa-arrow-left"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Blood Type + Password -->
+                <div id="step3" style="display:none">
+                    <p class="form-section-title"><i class="fas fa-tint"></i> فصيلة الدم *</p>
+                    <div class="blood-type-selector" style="margin-bottom:24px">
+                        <button class="blood-type-btn" type="button" onclick="selectBlood(this)">A+</button>
+                        <button class="blood-type-btn" type="button" onclick="selectBlood(this)">A-</button>
+                        <button class="blood-type-btn" type="button" onclick="selectBlood(this)">B+</button>
+                        <button class="blood-type-btn" type="button" onclick="selectBlood(this)">B-</button>
+                        <button class="blood-type-btn" type="button" onclick="selectBlood(this)">AB+</button>
+                        <button class="blood-type-btn" type="button" onclick="selectBlood(this)">AB-</button>
+                        <button class="blood-type-btn" type="button" onclick="selectBlood(this)">O+</button>
+                        <button class="blood-type-btn" type="button" onclick="selectBlood(this)">O-</button>
+                    </div>
+
+                    <p class="form-section-title"><i class="fas fa-lock"></i> كلمة المرور</p>
+                    <div class="form-group">
+                        <label>كلمة المرور * <small style="color:var(--gray-400);font-weight:400">(٨ أحرف على الأقل)</small></label>
+                        <div class="input-wrap">
+                            <input type="password" id="regPassword" placeholder="••••••••" oninput="checkPassStrength(this.value)">
+                            <button type="button" class="toggle-pass" onclick="togglePassField('regPassword', 'eye1')">
+                                <i class="fas fa-eye" id="eye1"></i>
+                            </button>
+                        </div>
+                        <div class="pass-strength" id="passStrength"></div>
+                        <p class="pass-hint" id="passHint"></p>
+                    </div>
+                    <div class="form-group">
+                        <label>تأكيد كلمة المرور *</label>
+                        <div class="input-wrap">
+                            <input type="password" id="regPasswordConfirm" placeholder="••••••••">
+                            <button type="button" class="toggle-pass" onclick="togglePassField('regPasswordConfirm', 'eye2')">
+                                <i class="fas fa-eye" id="eye2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom:20px">
+                        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:0.875rem">
+                            <input type="checkbox" id="termsCheck" style="accent-color:var(--red);margin-top:3px">
+                            <span>أوافق على <a href="#" style="color:var(--red)">الشروط والأحكام</a> وسياسة الخصوصية</span>
+                        </label>
+                    </div>
+
+                    <div style="display:flex;gap:12px">
+                        <button class="btn-submit" style="background:var(--gray-200);color:var(--gray-800);box-shadow:none" onclick="goToStep(2)">
+                            <i class="fas fa-arrow-right"></i> رجوع
+                        </button>
+                        <button class="btn-submit" id="registerFinalBtn" onclick="handleRegister(event)">
+                            <i class="fas fa-check-circle"></i> إنشاء الحساب
+                        </button>
+                    </div>
+                </div>
+
+                <div class="auth-switch" style="margin-top:20px">
+                    لديك حساب مسبقاً؟ <a href="login.html">سجّل الدخول</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // ===== وظائف خاصة بصفحة التسجيل =====
+
+        function validateStep1() {
+            const selected = document.querySelector('.type-btn.selected');
+            if (!selected) {
+                showToast('يرجى اختيار نوع الحساب أولاً', 'error');
+                return;
+            }
+            goToStep(2);
+        }
+
+        function validateStep2() {
+            const firstName = document.getElementById('firstName').value.trim();
+            const phone     = document.getElementById('regPhone').value.trim();
+            const city      = document.getElementById('regCity').value;
+            const age       = document.getElementById('regAge').value;
+
+            if (!firstName) return showToast('يرجى إدخال الاسم الأول', 'error');
+            if (!phone || phone.length < 10) return showToast('يرجى إدخال رقم هاتف صحيح', 'error');
+            if (!city) return showToast('يرجى اختيار المحافظة', 'error');
+            if (!age || age < 18) return showToast('يجب أن يكون عمرك ١٨ سنة أو أكثر', 'error');
+
+            goToStep(3);
+        }
+
+        function checkPassStrength(val) {
+            const bar  = document.getElementById('passStrength');
+            const hint = document.getElementById('passHint');
+            if (!val) { bar.style.background = 'var(--gray-200)'; bar.style.width = '0'; hint.textContent = ''; return; }
+
+            let score = 0;
+            if (val.length >= 8)  score++;
+            if (val.length >= 12) score++;
+            if (/[A-Z]/.test(val)) score++;
+            if (/[0-9]/.test(val)) score++;
+            if (/[^A-Za-z0-9]/.test(val)) score++;
+
+            const levels = [
+                { color: '#DC2626', label: 'ضعيفة جداً', w: '20%' },
+                { color: '#EA580C', label: 'ضعيفة', w: '40%' },
+                { color: '#D97706', label: 'متوسطة', w: '60%' },
+                { color: '#16A34A', label: 'قوية', w: '80%' },
+                { color: '#15803D', label: 'قوية جداً ✓', w: '100%' },
+            ];
+            const lvl = levels[Math.min(score - 1, 4)] || levels[0];
+            bar.style.background = lvl.color;
+            bar.style.width = lvl.w;
+            hint.textContent = 'القوة: ' + lvl.label;
+            hint.style.color = lvl.color;
+        }
+
+        function togglePassField(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon  = document.getElementById(iconId);
+            input.type  = input.type === 'password' ? 'text' : 'password';
+            icon.className = input.type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+        }
+
+        // تسجيل بـ Google
+        async function registerWithGoogle() {
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                const result   = await auth.signInWithPopup(provider);
+                const user     = result.user;
+
+                // حفظ البيانات إذا مستخدم جديد
+                if (result.additionalUserInfo?.isNewUser) {
+                    await db.collection('users').doc(user.uid).set({
+                        name:      user.displayName || '',
+                        firstName: user.displayName?.split(' ')[0] || '',
+                        lastName:  user.displayName?.split(' ').slice(1).join(' ') || '',
+                        phone:     user.phoneNumber || '',
+                        email:     user.email || '',
+                        role:      'donor',
+                        available: true,
+                        totalDonations: 0,
+                        bloodType: '',   // سيكمل من ملف التعريف
+                        city:      '',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+
+                showToast('تم تسجيل الدخول بـ Google! 🎉', 'success');
+                // إذا مستخدم جديد اذهب لإكمال الملف، وإلا للرئيسية
+                const dest = result.additionalUserInfo?.isNewUser ? 'complete-profile.html' : 'index.html';
+                setTimeout(() => window.location.href = dest, 1200);
+
+            } catch (err) {
+                if (err.code === 'auth/popup-closed-by-user') return;
+                if (err.code === 'auth/operation-not-allowed') {
+                    showToast('يرجى تفعيل Google في Firebase Console أولاً', 'error');
+                } else {
+                    showToast('حدث خطأ: ' + err.message, 'error');
+                }
+            }
+        }
+    </script>
+
+    <script>
+        // إذا مسجل دخول بالفعل — لا حاجة للتسجيل
+        if (typeof auth !== 'undefined') {
+            auth.onAuthStateChanged(user => {
+                if (user) window.location.href = 'index.html';
+            });
+        }
+    </script>
+
+    <script>
+        // إذا مسجل دخول بالفعل — اذهب للرئيسية
+        if (typeof auth !== 'undefined') {
+            auth.onAuthStateChanged(user => {
+                if (user) window.location.href = 'index.html';
+            });
+        }
+    </script>
+</body>
+</html>

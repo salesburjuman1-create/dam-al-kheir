@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول — دم الخير</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i class="fas fa-droplet"></i></div>
+                <span class="logo-text">دم <strong>الخير</strong></span>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="donors.html">المتبرعون</a></li>
+                <li><a href="requests.html">طلبات الدم</a></li>
+            </ul>
+                        <div class="nav-actions">
+                <a href="login.html" class="btn-outline-sm nav-login-link">دخول</a>
+                <a href="register.html" class="btn-primary-sm nav-register-link">تسجيل <i class="fas fa-arrow-left"></i></a>
+                <a href="profile.html" class="btn-primary-sm nav-dash-link" style="display:none">
+                    <i class="fas fa-user-circle"></i> <span id="navUserName">حسابي</span>
+                </a>
+                <a href="admin.html" class="btn-outline-sm nav-admin-link" style="display:none;border-color:#C0152A;color:#C0152A;gap:6px">
+                    <i class="fas fa-shield-alt"></i> الإدارة
+                </a>
+            </div>
+            <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <!-- Auth Section -->
+    <section class="auth-page">
+        <div class="container">
+            <div class="auth-card fade-in">
+                <div class="auth-header">
+                    <div class="auth-logo">
+                        <div class="logo-icon"><i class="fas fa-droplet"></i></div>
+                        <span class="logo-text">دم <strong>الخير</strong></span>
+                    </div>
+                    <h2>أهلاً بعودتك!</h2>
+                    <p>سجّل دخولك للوصول إلى حسابك</p>
+                </div>
+
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label><i class="fas fa-phone" style="color:var(--red);margin-left:6px"></i> رقم الهاتف</label>
+                        <input type="tel" id="loginPhone" placeholder="07XX-XXX-XXXX" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock" style="color:var(--red);margin-left:6px"></i> كلمة المرور</label>
+                        <div style="position:relative">
+                            <input type="password" id="loginPassword" placeholder="••••••••" required style="padding-left:44px">
+                            <button type="button" onclick="togglePassword()" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--gray-400)">
+                                <i class="fas fa-eye" id="eyeIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;font-size:0.875rem">
+                        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:500">
+                            <input type="checkbox" style="accent-color:var(--red)"> تذكرني
+                        </label>
+                        <a href="#" style="color:var(--red);font-weight:600">نسيت كلمة المرور؟</a>
+                    </div>
+
+                    <button type="submit" class="btn-submit" >
+                        <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                    </button>
+                </form>
+
+                <div class="auth-switch">
+                    ليس لديك حساب؟ <a href="register.html">سجّل الآن مجاناً</a>
+                </div>
+
+                <!-- Divider -->
+                <div style="display:flex;align-items:center;gap:12px;margin:24px 0">
+                    <div style="flex:1;height:1px;background:var(--gray-200)"></div>
+                    <span style="font-size:0.8rem;color:var(--gray-400)">أو</span>
+                    <div style="flex:1;height:1px;background:var(--gray-200)"></div>
+                </div>
+
+                <div style="display:flex;gap:12px">
+                    <button style="flex:1;padding:12px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);background:white;font-family:var(--font-main);font-size:0.875rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:var(--transition)" onmouseover="this.style.borderColor='#4285F4'" onmouseout="this.style.borderColor='var(--gray-200)'" onclick="loginWithGoogle()">
+                        <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#4285F4" d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.3 0 6.3 1.2 8.6 3.3l6.3-6.3C34.9 5.1 29.8 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.5 0 20-7.5 20-21 0-1.4-.1-2.7-.5-4z"/></svg> Google
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Firebase v9 compat -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+
+    <script>
+        async function loginWithGoogle() {
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                const result = await auth.signInWithPopup(provider);
+                if (result.additionalUserInfo?.isNewUser) {
+                    const user = result.user;
+                    await db.collection('users').doc(user.uid).set({
+                        name: user.displayName || '', firstName: user.displayName?.split(' ')[0] || '',
+                        email: user.email || '', role: 'donor', available: true,
+                        totalDonations: 0, bloodType: '', city: '',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+                showToast('أهلاً بك! 🎉', 'success');
+                // تحقق إذا اكتمل الملف الشخصي
+                try {
+                    const doc = await db.collection('users').doc(result.user.uid).get();
+                    const isComplete = doc.exists && doc.data().phone && doc.data().bloodType;
+                    setTimeout(() => window.location.href = isComplete ? 'index.html' : 'complete-profile.html', 1200);
+                } catch { setTimeout(() => window.location.href = 'index.html', 1200); }
+            } catch(err) {
+                if (err.code === 'auth/popup-closed-by-user') return;
+                if (err.code === 'auth/operation-not-allowed') showToast('فعّل Google من Firebase Console', 'error');
+                else showToast('حدث خطأ، حاول مرة أخرى', 'error');
+            }
+        }
+    </script>
+
+    <script>
+        // إذا مسجل دخول — اذهب للرئيسية
+        if (typeof auth !== 'undefined') {
+            auth.onAuthStateChanged(user => {
+                if (user) window.location.href = 'index.html';
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المستشفيات — دم الخير</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .hospital-card {
+            background: white; border-radius: var(--radius); padding: 24px;
+            border: 1px solid var(--gray-200); transition: var(--transition);
+            display: flex; flex-direction: column; gap: 14px;
+        }
+        .hospital-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--red); }
+        .hospital-header { display: flex; align-items: flex-start; gap: 14px; }
+        .hospital-icon {
+            width: 52px; height: 52px; background: var(--red-faint);
+            border-radius: 14px; display: flex; align-items: center;
+            justify-content: center; color: var(--red); font-size: 1.4rem; flex-shrink: 0;
+        }
+        .hospital-name { font-weight: 800; color: var(--gray-900); font-size: 1rem; margin-bottom: 4px; }
+        .hospital-city { font-size: 0.82rem; color: var(--gray-600); }
+        .hospital-meta { display: flex; flex-direction: column; gap: 6px; }
+        .hospital-meta span { font-size: 0.82rem; color: var(--gray-600); display: flex; align-items: center; gap: 6px; }
+        .hospital-meta i { color: var(--red); width: 14px; text-align: center; }
+        .hospital-actions { display: flex; gap: 8px; margin-top: 4px; }
+        .btn-call {
+            flex: 1; padding: 10px; background: var(--red); color: white;
+            border: none; border-radius: 50px; font-family: var(--font-main);
+            font-size: 0.82rem; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            transition: var(--transition); text-decoration: none;
+        }
+        .btn-call:hover { background: var(--red-dark); }
+        .btn-map {
+            padding: 10px 16px; background: var(--gray-100); color: var(--gray-700);
+            border: 1px solid var(--gray-200); border-radius: 50px;
+            font-family: var(--font-main); font-size: 0.82rem; font-weight: 600;
+            cursor: pointer; display: flex; align-items: center; gap: 6px;
+            transition: var(--transition); text-decoration: none;
+        }
+        .btn-map:hover { background: var(--gray-200); }
+        .verified-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 3px 10px; background: #DCFCE7; color: #16A34A;
+            border-radius: 50px; font-size: 0.72rem; font-weight: 700;
+        }
+        .hospitals-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+        @media(max-width:1024px){ .hospitals-grid { grid-template-columns: repeat(2,1fr); } }
+        @media(max-width:640px){ .hospitals-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i class="fas fa-droplet"></i></div>
+                <span class="logo-text">دم <strong>الخير</strong></span>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="donors.html">المتبرعون</a></li>
+                <li><a href="requests.html">طلبات الدم</a></li>
+                <li><a href="hospitals.html" class="active">المستشفيات</a></li>
+            </ul>
+                        <div class="nav-actions">
+                <a href="login.html" class="btn-outline-sm nav-login-link">دخول</a>
+                <a href="register.html" class="btn-primary-sm nav-register-link">تسجيل <i class="fas fa-arrow-left"></i></a>
+                <a href="profile.html" class="btn-primary-sm nav-dash-link" style="display:none">
+                    <i class="fas fa-user-circle"></i> <span id="navUserName">حسابي</span>
+                </a>
+                <a href="admin.html" class="btn-outline-sm nav-admin-link" style="display:none;border-color:#C0152A;color:#C0152A;gap:6px">
+                    <i class="fas fa-shield-alt"></i> الإدارة
+                </a>
+            </div>
+            <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <div style="background:linear-gradient(135deg,var(--red-dark),var(--red));padding:48px 0;color:white">
+        <div class="container" style="text-align:center">
+            <h1 style="font-size:2.2rem;font-weight:900;margin-bottom:8px">المستشفيات الشريكة</h1>
+            <p style="opacity:0.85">مستشفيات معتمدة تستقبل التبرعات وتحتاج مساعدتك</p>
+        </div>
+    </div>
+
+    <section class="list-page">
+        <div class="container">
+            <div class="filters-bar fade-in">
+                <input class="search-input" type="search" id="hospitalSearch" placeholder="🔍 ابحث باسم المستشفى..." oninput="filterHospitals()">
+                <select class="filter-select" id="hospitalCityFilter" onchange="filterHospitals()">
+                    <option value="">كل المحافظات</option>
+                    <option>بغداد</option><option>البصرة</option><option>الموصل</option>
+                    <option>كربلاء</option><option>النجف</option><option>أربيل</option>
+                    <option>كركوك</option><option>ديالى</option><option>بابل</option>
+                </select>
+                <select class="filter-select" id="hospitalTypeFilter" onchange="filterHospitals()">
+                    <option value="">كل الأنواع</option>
+                    <option value="حكومي">حكومي</option>
+                    <option value="أهلي">أهلي</option>
+                    <option value="تعليمي">تعليمي</option>
+                </select>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+                <p style="font-size:0.875rem;color:var(--gray-600)">
+                    <strong id="hospitalsCount" style="color:var(--red)">0</strong> مستشفى مسجل
+                </p>
+            </div>
+
+            <div class="hospitals-grid" id="hospitalsGrid">
+                <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--gray-400)">
+                    <i class="fas fa-spinner fa-spin fa-2x"></i>
+                    <p style="margin-top:12px">جاري التحميل...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top:1px solid rgba(255,255,255,0.1);padding-top:20px">
+                <p>© ٢٠٢٤ دم الخير — جميع الحقوق محفوظة</p>
+                <p>صُنع بـ <i class="fas fa-heart" style="color:#e63946"></i> من أجل العراق</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // بيانات افتراضية ريثما تُضاف من الأدمن
+        const defaultHospitals = [
+            { id:'h1', name:'مستشفى النجاح', city:'بغداد', address:'الكرخ، شارع الرشيد', phone:'07700000001', type:'حكومي', beds:400, bloodBank:true, verified:true },
+            { id:'h2', name:'مستشفى السلام', city:'بغداد', address:'الرصافة، المنصور', phone:'07700000002', type:'حكومي', beds:300, bloodBank:true, verified:true },
+            { id:'h3', name:'مستشفى ابن سينا', city:'الموصل', address:'حي النور', phone:'07700000003', type:'تعليمي', beds:500, bloodBank:true, verified:true },
+            { id:'h4', name:'مستشفى الإمام علي', city:'النجف', address:'شارع الرسول', phone:'07700000004', type:'حكومي', beds:250, bloodBank:true, verified:true },
+            { id:'h5', name:'مستشفى كربلاء التعليمي', city:'كربلاء', address:'حي العباس', phone:'07700000005', type:'تعليمي', beds:350, bloodBank:true, verified:true },
+            { id:'h6', name:'مستشفى البصرة العام', city:'البصرة', address:'شارع الميناء', phone:'07700000006', type:'حكومي', beds:600, bloodBank:true, verified:true },
+            { id:'h7', name:'مستشفى أربيل التخصصي', city:'أربيل', address:'شارع 100 متر', phone:'07700000007', type:'أهلي', beds:200, bloodBank:false, verified:true },
+            { id:'h8', name:'مستشفى بابل التعليمي', city:'بابل', address:'الحلة — المركز', phone:'07700000008', type:'تعليمي', beds:280, bloodBank:true, verified:true },
+            { id:'h9', name:'مركز القلب التخصصي', city:'بغداد', address:'المنصور، الطابق الأول', phone:'07700000009', type:'أهلي', beds:120, bloodBank:true, verified:true },
+        ];
+
+        let allHospitals = [...defaultHospitals];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // تحميل من Firestore real-time
+            db.collection('hospitals').onSnapshot(snap => {
+                if (!snap.empty) {
+                    // استخدم بيانات Firestore فقط إذا موجودة
+                    allHospitals = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                } else {
+                    // لا توجد بيانات في Firestore — استخدم الافتراضية
+                    allHospitals = [...defaultHospitals];
+                }
+                renderHospitals(allHospitals);
+            }, () => {
+                // خطأ في الاتصال — استخدم الافتراضية
+                renderHospitals(defaultHospitals);
+            });
+        });
+
+        function renderHospitals(list) {
+            const grid = document.getElementById('hospitalsGrid');
+            document.getElementById('hospitalsCount').textContent = list.length;
+            if (!list.length) {
+                grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--gray-400)"><i class="fas fa-hospital fa-3x" style="margin-bottom:16px;display:block"></i><p>لا توجد مستشفيات بهذه المعايير</p></div>';
+                return;
+            }
+            grid.innerHTML = list.map(h => `
+                <div class="hospital-card fade-in">
+                    <div class="hospital-header">
+                        <div class="hospital-icon"><i class="fas fa-hospital"></i></div>
+                        <div style="flex:1">
+                            <div class="hospital-name">${h.name}</div>
+                            <div class="hospital-city"><i class="fas fa-map-marker-alt" style="color:var(--red);font-size:0.7rem"></i> ${h.city}</div>
+                        </div>
+                        ${h.verified ? '<span class="verified-badge"><i class="fas fa-check-circle"></i> موثّق</span>' : ''}
+                    </div>
+                    <div class="hospital-meta">
+                        <span><i class="fas fa-tag"></i> ${h.type || 'حكومي'}</span>
+                        <span><i class="fas fa-bed"></i> ${h.beds || '—'} سرير</span>
+                        <span><i class="fas fa-map-marker-alt"></i> ${h.address || h.city}</span>
+                        <span><i class="fas fa-tint" style="color:${h.bloodBank?'var(--red)':'var(--gray-400)'}"></i>
+                            ${h.bloodBank ? '<span style="color:var(--red);font-weight:700">يوجد بنك دم</span>' : 'لا يوجد بنك دم'}
+                        </span>
+                    </div>
+                    <div class="hospital-actions">
+                        <a href="tel:${h.phone}" class="btn-call"><i class="fas fa-phone"></i> اتصل الآن</a>
+                        <a href="https://maps.google.com/?q=${encodeURIComponent(h.name+' '+h.city+' العراق')}" target="_blank" class="btn-map">
+                            <i class="fas fa-map"></i> الخريطة
+                        </a>
+                    </div>
+                </div>`).join('');
+        }
+
+        function filterHospitals() {
+            const search = document.getElementById('hospitalSearch').value.toLowerCase();
+            const city   = document.getElementById('hospitalCityFilter').value;
+            const type   = document.getElementById('hospitalTypeFilter').value;
+            const filtered = allHospitals.filter(h =>
+                (!search || h.name.includes(search) || h.city.includes(search)) &&
+                (!city   || h.city === city) &&
+                (!type   || h.type === type)
+            );
+            renderHospitals(filtered);
+        }
+    </script>
+</body>
+</html>

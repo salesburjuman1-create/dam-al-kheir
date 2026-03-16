@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طلب دم — دم الخير</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i class="fas fa-droplet"></i></div>
+                <span class="logo-text">دم <strong>الخير</strong></span>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="donors.html">المتبرعون</a></li>
+                <li><a href="requests.html" class="active">طلبات الدم</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="login.html" class="btn-outline-sm nav-login-link">دخول</a>
+                <a href="register.html" class="btn-primary-sm nav-register-link">تسجيل <i class="fas fa-arrow-left"></i></a>
+                <a href="profile.html" class="btn-primary-sm nav-dash-link" style="display:none">
+                    <i class="fas fa-user-circle"></i> <span id="navUserName">حسابي</span>
+                </a>
+                <a href="admin.html" class="btn-outline-sm nav-admin-link" style="display:none;border-color:#C0152A;color:#C0152A;gap:6px">
+                    <i class="fas fa-shield-alt"></i> الإدارة
+                </a>
+            </div>
+            <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <section class="request-page">
+        <div class="container">
+            <div class="page-header fade-in">
+                <div style="display:inline-flex;align-items:center;justify-content:center;width:72px;height:72px;background:linear-gradient(135deg,var(--red),var(--red-dark));border-radius:20px;margin-bottom:20px;box-shadow:var(--shadow-red)">
+                    <i class="fas fa-heartbeat" style="font-size:2rem;color:white"></i>
+                </div>
+                <h1>طلب دم عاجل</h1>
+                <p>سيتم إرسال طلبك فوراً لجميع المتبرعين القريبين منك</p>
+            </div>
+
+            <div class="request-form-card fade-in">
+                <!-- Urgency -->
+                <p class="form-section-title"><i class="fas fa-bolt"></i> مستوى الطوارئ</p>
+                <div class="urgency-toggle" style="margin-bottom:28px">
+                    <button class="urgency-btn urgent selected" id="urgentBtn" onclick="selectUrgency('urgent')">
+                        <i class="fas fa-circle-exclamation"></i> طارئ — خلال ساعات
+                    </button>
+                    <button class="urgency-btn normal" id="normalBtn" onclick="selectUrgency('normal')">
+                        <i class="fas fa-calendar-alt"></i> مجدول — خلال أيام
+                    </button>
+                </div>
+
+                <!-- Blood Type -->
+                <p class="form-section-title"><i class="fas fa-tint"></i> فصيلة الدم المطلوبة</p>
+                <div class="blood-type-selector" style="margin-bottom:28px">
+                    <button class="blood-type-btn" onclick="selectBlood(this)" type="button">A+</button>
+                    <button class="blood-type-btn" onclick="selectBlood(this)" type="button">A-</button>
+                    <button class="blood-type-btn" onclick="selectBlood(this)" type="button">B+</button>
+                    <button class="blood-type-btn" onclick="selectBlood(this)" type="button">B-</button>
+                    <button class="blood-type-btn" onclick="selectBlood(this)" type="button">AB+</button>
+                    <button class="blood-type-btn" onclick="selectBlood(this)" type="button">AB-</button>
+                    <button class="blood-type-btn" onclick="selectBlood(this)" type="button">O+</button>
+                    <button class="blood-type-btn" onclick="selectBlood(this)" type="button">O-</button>
+                </div>
+
+                <!-- Patient Info -->
+                <p class="form-section-title"><i class="fas fa-user-injured"></i> بيانات المريض</p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>اسم المريض</label>
+                        <input type="text" id="patientName" placeholder="الاسم الكامل">
+                    </div>
+                    <div class="form-group">
+                        <label>العمر</label>
+                        <input type="number" id="patientAge" placeholder="٣٥" min="1" max="120">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>عدد الوحدات المطلوبة</label>
+                    <input type="number" id="bloodUnits" placeholder="٢" min="1" max="10">
+                </div>
+                <div class="form-group">
+                    <label>التشخيص / سبب الحاجة</label>
+                    <input type="text" id="diagnosis" placeholder="مثال: عملية قيصرية، حادث سير، عملية قلب...">
+                </div>
+
+                <!-- Hospital -->
+                <p class="form-section-title" style="margin-top:8px"><i class="fas fa-hospital"></i> موقع المستشفى</p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>المحافظة</label>
+                        <select id="requestCity">
+                            <option value="">اختر...</option>
+                            <option>بغداد</option>
+                            <option>البصرة</option>
+                            <option selected>كربلاء</option>
+                            <option>الموصل</option>
+                            <option>أربيل</option>
+                            <option>النجف</option>
+                            <option>الأنبار</option>
+                            <option>ديالى</option>
+                            <option>كركوك</option>
+                            <option>ذي قار</option>
+                            <option>ميسان</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>المستشفى</label>
+                        <input type="text" id="requestHospital" placeholder="اسم المستشفى">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>رقم التواصل (هاتف ولي الأمر)</label>
+                    <input type="tel" id="requestPhone" placeholder="07XX-XXX-XXXX">
+                </div>
+                <div class="form-group">
+                    <label>ملاحظات إضافية <span style="color:var(--gray-400);font-weight:400">(اختياري)</span></label>
+                    <textarea id="requestNotes" placeholder="أي معلومات إضافية مفيدة..." style="width:100%;padding:12px 16px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-family:var(--font-main);font-size:0.95rem;background:var(--gray-100);resize:vertical;min-height:90px;outline:none;transition:var(--transition)" onfocus="this.style.borderColor='var(--red)';this.style.background='white'" onblur="this.style.borderColor='var(--gray-200)';this.style.background='var(--gray-100)'"></textarea>
+                </div>
+
+                <button class="btn-submit" style="margin-top:8px" onclick="handleRequest(event)" type="button">
+                    <i class="fas fa-paper-plane"></i> إرسال الطلب الآن
+                </button>
+
+                <p style="text-align:center;margin-top:16px;font-size:0.82rem;color:var(--gray-400)">
+                    <i class="fas fa-shield-alt" style="color:var(--red)"></i>
+                    بياناتك محمية وسرية — سيتم التواصل معك مباشرة
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Firebase v9 compat -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+
+    <script>
+        // ملء البيانات تلقائياً من حساب المستخدم
+        if (typeof auth !== 'undefined') {
+            auth.onAuthStateChanged(async user => {
+                if (!user) return; // الدالة handleRequest ستطلب منه تسجيل الدخول
+                try {
+                    const doc = await db.collection('users').doc(user.uid).get();
+                    if (!doc.exists) return;
+                    const d = doc.data();
+
+                    // ملء الاسم
+                    const nameEl = document.getElementById('patientName');
+                    if (nameEl && !nameEl.value) nameEl.value = d.name || '';
+
+                    // ملء الهاتف
+                    const phoneEl = document.getElementById('requestPhone');
+                    if (phoneEl && !phoneEl.value) phoneEl.value = d.phone || '';
+
+                    // ملء المحافظة
+                    const cityEl = document.getElementById('requestCity');
+                    if (cityEl && d.city) {
+                        for (let opt of cityEl.options) {
+                            if (opt.value === d.city || opt.text === d.city) {
+                                opt.selected = true; break;
+                            }
+                        }
+                    }
+                } catch(e) {}
+            });
+        }
+    </script>
+</body>
+</html>

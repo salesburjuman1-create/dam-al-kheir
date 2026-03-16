@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المتبرعون — دم الخير</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i class="fas fa-droplet"></i></div>
+                <span class="logo-text">دم <strong>الخير</strong></span>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="donors.html" class="active">المتبرعون</a></li>
+                <li><a href="requests.html">طلبات الدم</a></li>
+                <li><a href="hospitals.html">المستشفيات</a></li>
+            </ul>
+                        <div class="nav-actions">
+                <a href="login.html" class="btn-outline-sm nav-login-link">دخول</a>
+                <a href="register.html" class="btn-primary-sm nav-register-link">تسجيل <i class="fas fa-arrow-left"></i></a>
+                <a href="profile.html" class="btn-primary-sm nav-dash-link" style="display:none">
+                    <i class="fas fa-user-circle"></i> <span id="navUserName">حسابي</span>
+                </a>
+                <a href="admin.html" class="btn-outline-sm nav-admin-link" style="display:none;border-color:#C0152A;color:#C0152A;gap:6px">
+                    <i class="fas fa-shield-alt"></i> الإدارة
+                </a>
+            </div>
+            <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <!-- Page Banner -->
+    <div style="background:linear-gradient(135deg,var(--red-dark),var(--red));padding:48px 0;color:white">
+        <div class="container" style="text-align:center">
+            <h1 style="font-size:2.2rem;font-weight:900;margin-bottom:8px">المتبرعون</h1>
+            <p style="opacity:0.85">ابحث عن متبرع بفصيلة دمك في محافظتك</p>
+        </div>
+    </div>
+
+    <section class="list-page">
+        <div class="container">
+            <!-- Filters -->
+            <div class="filters-bar fade-in">
+                <input class="search-input" type="search" placeholder="🔍 ابحث باسم المتبرع...">
+                <select class="filter-select" id="bloodFilter" onchange="filterDonors()">
+                    <option value="">كل فصائل الدم</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                </select>
+                <select class="filter-select" id="cityFilter" onchange="filterDonors()">
+                    <option value="">كل المحافظات</option>
+                    <option>بغداد</option>
+                    <option>البصرة</option>
+                    <option>الموصل</option>
+                    <option>كربلاء</option>
+                    <option>النجف</option>
+                    <option>أربيل</option>
+                    <option>كركوك</option>
+                </select>
+                <select class="filter-select">
+                    <option>متاح للتبرع</option>
+                    <option>غير متاح</option>
+                    <option>الكل</option>
+                </select>
+            </div>
+
+            <!-- Results Count -->
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+                <p style="font-size:0.875rem;color:var(--gray-600)">
+                    تم العثور على <strong id="donorsCount" style="color:var(--red)">١٢</strong> متبرع
+                </p>
+                <div style="display:flex;gap:8px">
+                    <button onclick="setView('grid')" id="gridViewBtn" style="width:36px;height:36px;border-radius:8px;border:1.5px solid var(--red);background:var(--red);color:white;cursor:pointer;font-size:0.875rem">
+                        <i class="fas fa-th"></i>
+                    </button>
+                    <button onclick="setView('list')" id="listViewBtn" style="width:36px;height:36px;border-radius:8px;border:1.5px solid var(--gray-200);background:white;color:var(--gray-600);cursor:pointer;font-size:0.875rem">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Donors Grid -->
+            <div class="donors-grid" id="donorsGrid">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top:1px solid rgba(255,255,255,0.1);padding-top:20px">
+                <p>© 2026 دم الخير — جميع الحقوق محفوظة</p>
+                <p>صُنع بـ <i class="fas fa-heart" style="color:#e63946"></i> من أجل العراق</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase v9 compat -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

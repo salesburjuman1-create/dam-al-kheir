@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ملفي الشخصي — دم الخير</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background: var(--gray-100); }
+        .profile-page { padding: 40px 0; min-height: 100vh; }
+        .profile-layout { display: grid; grid-template-columns: 300px 1fr; gap: 24px; align-items: start; }
+        .pcard { background: white; border-radius: var(--radius-lg); border: 1px solid var(--gray-200); overflow: hidden; }
+        .pcard-top { background: linear-gradient(135deg, var(--red-dark), var(--red)); padding: 32px 24px; text-align: center; }
+        .p-avatar { width: 88px; height: 88px; border-radius: 50%; background: rgba(255,255,255,0.2); border: 3px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 900; color: white; margin: 0 auto 14px; overflow: hidden; }
+        .p-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .p-name  { font-size: 1.1rem; font-weight: 800; color: white; margin-bottom: 6px; }
+        .p-blood { display: inline-block; padding: 4px 14px; background: rgba(255,255,255,0.2); color: white; border-radius: 50px; font-size: 0.875rem; font-weight: 700; margin-bottom: 6px; }
+        .p-city  { font-size: 0.82rem; color: rgba(255,255,255,0.75); }
+        .pcard-body { padding: 20px; }
+        .pstat-row { display: flex; justify-content: space-around; padding: 14px 0; border-bottom: 1px solid var(--gray-200); margin-bottom: 16px; }
+        .pstat { text-align: center; }
+        .pstat-num { font-size: 1.4rem; font-weight: 900; color: var(--gray-900); }
+        .pstat-lbl { font-size: 0.7rem; color: var(--gray-400); margin-top: 2px; }
+        .p-info-list { display: flex; flex-direction: column; gap: 10px; }
+        .p-info-item { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: var(--gray-600); }
+        .p-info-icon { width: 32px; height: 32px; background: var(--red-faint); color: var(--red); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; }
+        .avail-btn { width: 100%; padding: 10px; border-radius: 50px; border: none; font-family: 'Cairo',sans-serif; font-size: 0.875rem; font-weight: 700; cursor: pointer; margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: var(--transition); }
+        .avail-on  { background: #DCFCE7; color: #16A34A; }
+        .avail-off { background: #FEE2E2; color: var(--red); }
+        .logout-btn { width: 100%; padding: 11px; background: #FEE2E2; color: var(--red); border: none; border-radius: 50px; font-family: 'Cairo',sans-serif; font-size: 0.875rem; font-weight: 700; cursor: pointer; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: var(--transition); }
+        .logout-btn:hover { background: var(--red); color: white; }
+        .section-card { background: white; border-radius: var(--radius-lg); padding: 28px; border: 1px solid var(--gray-200); margin-bottom: 20px; }
+        .section-card-title { font-size: 1rem; font-weight: 800; color: var(--gray-900); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--red-faint); display: flex; align-items: center; gap: 8px; }
+        .section-card-title i { color: var(--red); }
+        .my-req-item { display: flex; align-items: center; gap: 14px; padding: 12px 14px; background: var(--gray-100); border-radius: var(--radius); margin-bottom: 8px; border: 1px solid var(--gray-200); }
+        .my-req-blood { width: 44px; height: 44px; background: var(--red); color: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.9rem; flex-shrink: 0; }
+        .my-req-info h4 { font-size: 0.875rem; font-weight: 700; color: var(--gray-900); }
+        .my-req-info span { font-size: 0.75rem; color: var(--gray-400); }
+        @media(max-width:768px){ .profile-layout { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i class="fas fa-droplet"></i></div>
+                <span class="logo-text">دم <strong>الخير</strong></span>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="donors.html">المتبرعون</a></li>
+                <li><a href="requests.html">طلبات الدم</a></li>
+                <li><a href="hospitals.html">المستشفيات</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="login.html" class="btn-outline-sm nav-login-link" style="display:none">دخول</a>
+                <a href="profile.html" class="btn-primary-sm nav-dash-link">
+                    <i class="fas fa-user-circle"></i> <span id="navUserName">حسابي</span>
+                </a>
+                <a href="admin.html" class="btn-outline-sm nav-admin-link" style="display:none;border-color:#C0152A;color:#C0152A;gap:6px">
+                    <i class="fas fa-shield-alt"></i> الإدارة
+                </a>
+            </div>
+            <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <div class="profile-page">
+        <div class="container">
+            <div id="profileLoading" style="text-align:center;padding:80px;color:var(--gray-400)">
+                <i class="fas fa-spinner fa-spin fa-3x" style="margin-bottom:16px;display:block"></i>
+                <p>جاري تحميل ملفك الشخصي...</p>
+            </div>
+            <div class="profile-layout" id="profileLayout" style="display:none">
+                <!-- بطاقة المعلومات -->
+                <div>
+                    <div class="pcard">
+                        <div class="pcard-top">
+                            <div class="p-avatar" id="pAvatar">؟</div>
+                            <div class="p-name"  id="pName">—</div>
+                            <div class="p-blood" id="pBlood">—</div>
+                            <div class="p-city"><i class="fas fa-map-marker-alt"></i> <span id="pCity">—</span></div>
+                        </div>
+                        <div class="pcard-body">
+                            <div class="pstat-row">
+                                <div class="pstat"><div class="pstat-num" id="pDonations">0</div><div class="pstat-lbl">تبرعاتي</div></div>
+                                <div class="pstat"><div class="pstat-num" id="pRequestsCount">0</div><div class="pstat-lbl">طلباتي</div></div>
+                            </div>
+                            <div class="p-info-list">
+                                <div class="p-info-item"><div class="p-info-icon"><i class="fas fa-phone"></i></div><span id="pPhone">—</span></div>
+                                <div class="p-info-item"><div class="p-info-icon"><i class="fas fa-envelope"></i></div><span id="pEmail">—</span></div>
+                                <div class="p-info-item"><div class="p-info-icon"><i class="fas fa-birthday-cake"></i></div><span id="pAge">—</span></div>
+                                <div class="p-info-item"><div class="p-info-icon"><i class="fas fa-user-tag"></i></div><span id="pRole">—</span></div>
+                            </div>
+                            <button class="avail-btn avail-on" id="availBtn" onclick="toggleAvailability()">
+                                <i class="fas fa-circle" style="font-size:0.5rem"></i>
+                                <span id="availText">متاح للتبرع</span>
+                            </button>
+                            <button class="logout-btn" onclick="handleLogout()">
+                                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- تعديل البيانات + طلباتي -->
+                <div>
+                    <div class="section-card">
+                        <div class="section-card-title"><i class="fas fa-user-edit"></i> تعديل بياناتي</div>
+                        <div class="form-row">
+                            <div class="form-group"><label>الاسم الأول</label><input type="text" id="editFirstName" placeholder="محمد"></div>
+                            <div class="form-group"><label>اسم العائلة</label><input type="text" id="editLastName" placeholder="الحسيني"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>رقم الهاتف</label><input type="tel" id="editPhone" placeholder="07XX-XXX-XXXX"></div>
+                            <div class="form-group"><label>العمر</label><input type="number" id="editAge" placeholder="25" min="16" max="70"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>المحافظة</label>
+                                <select id="editCity">
+                                    <option value="">اختر...</option>
+                                    <option>بغداد</option><option>البصرة</option><option>الموصل</option>
+                                    <option>أربيل</option><option>كربلاء</option><option>النجف</option>
+                                    <option>الأنبار</option><option>ديالى</option><option>كركوك</option>
+                                    <option>ذي قار</option><option>ميسان</option><option>المثنى</option>
+                                    <option>القادسية</option><option>واسط</option><option>بابل</option>
+                                    <option>صلاح الدين</option><option>السليمانية</option><option>دهوك</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>نوع الحساب</label>
+                                <select id="editRole">
+                                    <option value="donor">متبرع</option>
+                                    <option value="patient">محتاج دم</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>فصيلة الدم</label>
+                            <div class="blood-type-selector">
+                                <button class="blood-type-btn" type="button" onclick="selectBlood(this)">A+</button>
+                                <button class="blood-type-btn" type="button" onclick="selectBlood(this)">A-</button>
+                                <button class="blood-type-btn" type="button" onclick="selectBlood(this)">B+</button>
+                                <button class="blood-type-btn" type="button" onclick="selectBlood(this)">B-</button>
+                                <button class="blood-type-btn" type="button" onclick="selectBlood(this)">AB+</button>
+                                <button class="blood-type-btn" type="button" onclick="selectBlood(this)">AB-</button>
+                                <button class="blood-type-btn" type="button" onclick="selectBlood(this)">O+</button>
+                                <button class="blood-type-btn" type="button" onclick="selectBlood(this)">O-</button>
+                            </div>
+                        </div>
+                        <button class="btn-submit" style="margin-top:12px" onclick="saveProfile()">
+                            <i class="fas fa-save"></i> حفظ التغييرات
+                        </button>
+                    </div>
+
+                    <div class="section-card">
+                        <div class="section-card-title"><i class="fas fa-tint"></i> طلباتي السابقة</div>
+                        <div id="myRequestsList">
+                            <div style="text-align:center;padding:20px;color:var(--gray-400)"><i class="fas fa-spinner fa-spin"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+    <script>
+        let currentUid = null;
+        let currentData = {};
+
+        auth.onAuthStateChanged(async user => {
+            if (!user) { window.location.href = 'login.html'; return; }
+            currentUid = user.uid;
+            await loadProfile(user);
+        });
+
+        async function loadProfile(user) {
+            try {
+                const doc = await db.collection('users').doc(user.uid).get();
+                const d   = doc.exists ? doc.data() : {};
+                currentData = d;
+
+                // Avatar
+                const av = document.getElementById('pAvatar');
+                if (user.photoURL) av.innerHTML = `<img src="${user.photoURL}">`;
+                else av.textContent = (d.firstName || d.name || 'U')[0]?.toUpperCase() || 'U';
+
+                // Info
+                document.getElementById('pName').textContent   = d.name || user.displayName || '—';
+                document.getElementById('pBlood').textContent  = d.bloodType || '؟';
+                document.getElementById('pCity').textContent   = d.city || 'غير محدد';
+                document.getElementById('pPhone').textContent  = d.phone || 'غير مضاف';
+                document.getElementById('pEmail').textContent  = user.email || '—';
+                document.getElementById('pAge').textContent    = d.age ? d.age + ' سنة' : '—';
+                document.getElementById('pRole').textContent   = d.role === 'donor' ? 'متبرع' : 'محتاج دم';
+                document.getElementById('pDonations').textContent = d.totalDonations || 0;
+
+                // Availability
+                const isAvail = d.available !== false;
+                document.getElementById('availBtn').className = `avail-btn ${isAvail ? 'avail-on' : 'avail-off'}`;
+                document.getElementById('availText').textContent = isAvail ? 'متاح للتبرع — اضغط للإيقاف' : 'غير متاح — اضغط للتفعيل';
+
+                // Fill edit form
+                const parts = (d.name || '').split(' ');
+                document.getElementById('editFirstName').value = d.firstName || parts[0] || '';
+                document.getElementById('editLastName').value  = d.lastName  || parts.slice(1).join(' ') || '';
+                document.getElementById('editPhone').value     = d.phone || '';
+                document.getElementById('editAge').value       = d.age || '';
+                document.getElementById('editRole').value      = d.role || 'donor';
+                for (let opt of document.getElementById('editCity').options) {
+                    if (opt.value === d.city) { opt.selected = true; break; }
+                }
+                if (d.bloodType) {
+                    document.querySelectorAll('.blood-type-btn').forEach(btn => {
+                        if (btn.textContent.trim() === d.bloodType) btn.classList.add('selected');
+                    });
+                }
+
+                await loadMyRequests(user.uid);
+                document.getElementById('profileLoading').style.display = 'none';
+                document.getElementById('profileLayout').style.display  = 'grid';
+            } catch(e) {
+                console.error(e);
+                showToast('خطأ في تحميل الملف الشخصي', 'error');
+            }
+        }
+
+        async function loadMyRequests(uid) {
+            try {
+                const snap = await db.collection('blood_requests')
+                    .where('userId','==',uid).orderBy('createdAt','desc').limit(10).get();
+                document.getElementById('pRequestsCount').textContent = snap.size;
+                const list = document.getElementById('myRequestsList');
+                if (snap.empty) {
+                    list.innerHTML = '<p style="text-align:center;color:var(--gray-400);font-size:0.875rem;padding:16px">لا توجد طلبات سابقة</p>';
+                    return;
+                }
+                const statusColor = { active:'var(--red)', fulfilled:'#16A34A', cancelled:'var(--gray-400)' };
+                const statusLabel = { active:'نشط', fulfilled:'مكتمل', cancelled:'ملغي' };
+                list.innerHTML = snap.docs.map(d => {
+                    const r = d.data();
+                    const sc = statusColor[r.status]||'var(--red)';
+                    const sl = statusLabel[r.status]||'نشط';
+                    return `<div class="my-req-item">
+                        <div class="my-req-blood">${r.bloodType}</div>
+                        <div class="my-req-info" style="flex:1">
+                            <h4>${r.hospital||'—'} — ${r.city||''}</h4>
+                            <span>${r.createdAt ? formatArabicTime(r.createdAt) : ''}</span>
+                        </div>
+                        <span style="padding:4px 12px;background:${sc}22;color:${sc};border-radius:50px;font-size:0.75rem;font-weight:700">${sl}</span>
+                    </div>`;
+                }).join('');
+            } catch(e) {
+                document.getElementById('myRequestsList').innerHTML = '<p style="color:var(--gray-400);font-size:0.82rem;padding:12px">تعذر تحميل الطلبات</p>';
+            }
+        }
+
+        async function saveProfile() {
+            const btn = document.querySelector('.section-card .btn-submit');
+            const firstName = document.getElementById('editFirstName').value.trim();
+            const lastName  = document.getElementById('editLastName').value.trim();
+            const phone     = document.getElementById('editPhone').value.trim();
+            const age       = document.getElementById('editAge').value;
+            const city      = document.getElementById('editCity').value;
+            const role      = document.getElementById('editRole').value;
+            const bloodType = document.querySelector('.blood-type-btn.selected')?.textContent?.trim() || currentData.bloodType || '';
+
+            if (!firstName) return showToast('يرجى إدخال الاسم الأول', 'error');
+            if (!phone)     return showToast('يرجى إدخال رقم الهاتف', 'error');
+
+            showLoading(btn, 'جاري الحفظ...');
+            try {
+                const updated = {
+                    firstName, lastName, phone, city, role, bloodType,
+                    age: parseInt(age)||0,
+                    name: `${firstName} ${lastName}`.trim(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                await db.collection('users').doc(currentUid).set(updated, {merge:true});
+                if (role === 'donor') {
+                    await db.collection('donors').doc(currentUid).set({...updated, uid:currentUid}, {merge:true});
+                }
+                document.getElementById('pName').textContent  = updated.name;
+                document.getElementById('pBlood').textContent = bloodType || '؟';
+                document.getElementById('pCity').textContent  = city || '—';
+                document.getElementById('pPhone').textContent = phone;
+                hideLoading(btn);
+                showToast('تم حفظ التغييرات بنجاح ✓', 'success');
+            } catch(e) {
+                hideLoading(btn);
+                showToast('حدث خطأ في الحفظ', 'error');
+            }
+        }
+
+        async function toggleAvailability() {
+            const newVal = !(currentData.available !== false);
+            try {
+                await db.collection('users').doc(currentUid).update({available: newVal});
+                if (currentData.role === 'donor') {
+                    await db.collection('donors').doc(currentUid).update({available: newVal});
+                }
+                currentData.available = newVal;
+                document.getElementById('availBtn').className = `avail-btn ${newVal ? 'avail-on' : 'avail-off'}`;
+                document.getElementById('availText').textContent = newVal ? 'متاح للتبرع — اضغط للإيقاف' : 'غير متاح — اضغط للتفعيل';
+                showToast(newVal ? 'أنت الآن متاح للتبرع ✓' : 'تم إيقاف إتاحتك مؤقتاً', newVal ? 'success' : 'info');
+            } catch(e) { showToast('حدث خطأ', 'error'); }
+        }
+    </script>
+</body>
+</html>

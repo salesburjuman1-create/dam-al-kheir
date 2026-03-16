@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إكمال الملف الشخصي — دم الخير</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .profile-card { max-width: 540px; }
+        .google-user-info {
+            display: flex; align-items: center; gap: 14px;
+            background: var(--gray-100); border-radius: var(--radius);
+            padding: 16px 20px; margin-bottom: 28px;
+            border: 1px solid var(--gray-200);
+        }
+        .google-avatar {
+            width: 52px; height: 52px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--red), var(--red-dark));
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1.3rem; font-weight: 800; flex-shrink: 0;
+            overflow: hidden;
+        }
+        .google-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .google-user-name { font-weight: 700; color: var(--gray-900); font-size: 0.95rem; }
+        .google-user-email { font-size: 0.8rem; color: var(--gray-600); }
+        .google-badge {
+            margin-right: auto; display: flex; align-items: center; gap: 6px;
+            font-size: 0.75rem; color: #4285F4; font-weight: 600;
+        }
+        .step-tabs {
+            display: flex; gap: 0; margin-bottom: 28px;
+            background: var(--gray-100); border-radius: 12px; padding: 4px;
+        }
+        .step-tab {
+            flex: 1; padding: 10px; text-align: center; border-radius: 10px;
+            font-size: 0.8rem; font-weight: 600; color: var(--gray-400);
+            transition: var(--transition); cursor: default;
+        }
+        .step-tab.active { background: white; color: var(--red); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .step-tab.done { color: #16A34A; }
+        .step-tab i { display: block; font-size: 1rem; margin-bottom: 3px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i class="fas fa-droplet"></i></div>
+                <span class="logo-text">دم <strong>الخير</strong></span>
+            </a>
+        </div>
+    </nav>
+
+    <section class="auth-page" style="padding: 48px 0;">
+        <div class="container">
+            <div class="auth-card profile-card fade-in">
+                <div class="auth-header">
+                    <div style="width:64px;height:64px;background:linear-gradient(135deg,var(--red),var(--red-dark));border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:var(--shadow-red)">
+                        <i class="fas fa-user-edit" style="font-size:1.6rem;color:white"></i>
+                    </div>
+                    <h2>أكمل ملفك الشخصي</h2>
+                    <p>بيانات مهمة لنتمكن من ربطك بالمحتاجين</p>
+                </div>
+
+                <!-- بيانات حساب Google -->
+                <div class="google-user-info" id="googleUserInfo">
+                    <div class="google-avatar" id="googleAvatar">؟</div>
+                    <div>
+                        <div class="google-user-name" id="googleUserName">جاري التحميل...</div>
+                        <div class="google-user-email" id="googleUserEmail"></div>
+                    </div>
+                    <div class="google-badge">
+                        <svg width="14" height="14" viewBox="0 0 48 48"><path fill="#4285F4" d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.3 0 6.3 1.2 8.6 3.3l6.3-6.3C34.9 5.1 29.8 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.5 0 20-7.5 20-21 0-1.4-.1-2.7-.5-4z"/></svg>
+                        Google
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="step-tabs">
+                    <div class="step-tab active" id="tab1">
+                        <i class="fas fa-user"></i> بياناتك
+                    </div>
+                    <div class="step-tab" id="tab2">
+                        <i class="fas fa-tint"></i> فصيلة الدم
+                    </div>
+                    <div class="step-tab" id="tab3">
+                        <i class="fas fa-check-circle"></i> جاهز!
+                    </div>
+                </div>
+
+                <!-- STEP 1: Personal Info -->
+                <div id="pstep1">
+                    <p class="form-section-title"><i class="fas fa-user"></i> معلوماتك الشخصية</p>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>الاسم الأول *</label>
+                            <input type="text" id="cpFirstName" placeholder="محمد">
+                        </div>
+                        <div class="form-group">
+                            <label>اسم العائلة</label>
+                            <input type="text" id="cpLastName" placeholder="الحسيني">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>رقم الهاتف * <small style="color:var(--gray-400);font-weight:400">(للتواصل معك)</small></label>
+                        <input type="tel" id="cpPhone" placeholder="07XX-XXX-XXXX">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>المحافظة *</label>
+                            <select id="cpCity">
+                                <option value="">اختر...</option>
+                                <option>بغداد</option><option>البصرة</option>
+                                <option>الموصل</option><option>أربيل</option>
+                                <option>كربلاء</option><option>النجف</option>
+                                <option>الأنبار</option><option>ديالى</option>
+                                <option>كركوك</option><option>ذي قار</option>
+                                <option>ميسان</option><option>المثنى</option>
+                                <option>القادسية</option><option>واسط</option>
+                                <option>بابل</option><option>صلاح الدين</option>
+                                <option>السليمانية</option><option>دهوك</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>العمر *</label>
+                            <input type="number" id="cpAge" placeholder="25" min="16" max="70">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>أنا...</label>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px">
+                            <button type="button" class="type-btn" id="cp-btn-donor" onclick="cpSelectType('donor')" data-type="donor"
+                                style="padding:14px;border:2px solid var(--gray-200);border-radius:var(--radius);background:white;font-family:var(--font-main);cursor:pointer;transition:var(--transition);text-align:center">
+                                <i class="fas fa-hand-holding-heart" style="font-size:1.4rem;display:block;margin-bottom:6px;color:var(--gray-400)"></i>
+                                <span style="font-size:0.875rem;font-weight:700;color:var(--gray-600)">متبرع</span>
+                            </button>
+                            <button type="button" class="type-btn" id="cp-btn-patient" onclick="cpSelectType('patient')" data-type="patient"
+                                style="padding:14px;border:2px solid var(--gray-200);border-radius:var(--radius);background:white;font-family:var(--font-main);cursor:pointer;transition:var(--transition);text-align:center">
+                                <i class="fas fa-hospital-user" style="font-size:1.4rem;display:block;margin-bottom:6px;color:var(--gray-400)"></i>
+                                <span style="font-size:0.875rem;font-weight:700;color:var(--gray-600)">محتاج دم</span>
+                            </button>
+                        </div>
+                    </div>
+                    <button class="btn-submit" onclick="cpValidateStep1()" style="margin-top:8px">
+                        التالي <i class="fas fa-arrow-left"></i>
+                    </button>
+                </div>
+
+                <!-- STEP 2: Blood Type -->
+                <div id="pstep2" style="display:none">
+                    <p class="form-section-title"><i class="fas fa-tint"></i> فصيلة دمك *</p>
+                    <p style="font-size:0.875rem;color:var(--gray-600);margin-bottom:16px">هذه المعلومة ضرورية لمطابقتك مع طلبات الدم</p>
+                    <div class="blood-type-selector" style="margin-bottom:32px">
+                        <button class="blood-type-btn" type="button" onclick="selectBlood(this)">A+</button>
+                        <button class="blood-type-btn" type="button" onclick="selectBlood(this)">A-</button>
+                        <button class="blood-type-btn" type="button" onclick="selectBlood(this)">B+</button>
+                        <button class="blood-type-btn" type="button" onclick="selectBlood(this)">B-</button>
+                        <button class="blood-type-btn" type="button" onclick="selectBlood(this)">AB+</button>
+                        <button class="blood-type-btn" type="button" onclick="selectBlood(this)">AB-</button>
+                        <button class="blood-type-btn" type="button" onclick="selectBlood(this)">O+</button>
+                        <button class="blood-type-btn" type="button" onclick="selectBlood(this)">O-</button>
+                    </div>
+
+                    <div style="background:var(--red-faint);border:1px solid #FFCCCC;border-radius:var(--radius);padding:14px 16px;margin-bottom:20px;font-size:0.85rem;color:var(--red)">
+                        <i class="fas fa-info-circle"></i>
+                        إذا كنت لا تعرف فصيلة دمك، اختر "لا أعرف" وحدّثها لاحقاً من ملفك الشخصي
+                    </div>
+                    <button class="blood-type-btn" type="button" onclick="selectBloodUnknown(this)"
+                        style="width:100%;margin-bottom:20px;font-size:0.85rem;padding:12px">
+                        لا أعرف فصيلة دمي
+                    </button>
+
+                    <div style="display:flex;gap:12px">
+                        <button class="btn-submit" style="background:var(--gray-200);color:var(--gray-800);box-shadow:none" onclick="cpGoToStep(1)">
+                            <i class="fas fa-arrow-right"></i> رجوع
+                        </button>
+                        <button class="btn-submit" id="cpSaveBtn" onclick="saveProfile()">
+                            <i class="fas fa-check-circle"></i> حفظ وإكمال
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Done -->
+                <div id="pstep3" style="display:none;text-align:center;padding:20px 0">
+                    <div style="width:80px;height:80px;background:#DCFCE7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;animation:popIn 0.5s ease">
+                        <i class="fas fa-check-circle" style="font-size:2.5rem;color:#16A34A"></i>
+                    </div>
+                    <h3 style="font-size:1.4rem;font-weight:800;color:var(--gray-900);margin-bottom:8px">تم بنجاح! 🎉</h3>
+                    <p style="color:var(--gray-600);margin-bottom:28px">ملفك الشخصي اكتمل، أهلاً بك في دم الخير</p>
+                    <a href="index.html" class="btn-submit" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;width:auto;padding:14px 32px;border-radius:50px">
+                        <i class="fas fa-home"></i> ابدأ الآن
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            70% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .type-btn.selected {
+            border-color: var(--red) !important;
+            background: var(--red-faint) !important;
+        }
+        .type-btn.selected i, .type-btn.selected span {
+            color: var(--red) !important;
+        }
+    </style>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+    <script>
+        let currentUser = null;
+
+        // تحقق من المستخدم عند تحميل الصفحة
+        auth.onAuthStateChanged(async user => {
+            if (!user) {
+                // غير مسجل — أرجعه لصفحة التسجيل
+                window.location.href = 'register.html';
+                return;
+            }
+            currentUser = user;
+
+            // تحقق إذا أكمل ملفه مسبقاً
+            const doc = await db.collection('users').doc(user.uid).get();
+            if (doc.exists && doc.data().phone && doc.data().bloodType) {
+                // مكتمل — ابعثه للرئيسية
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // عرض بياناته من Google
+            const avatarEl = document.getElementById('googleAvatar');
+            const nameEl   = document.getElementById('googleUserName');
+            const emailEl  = document.getElementById('googleUserEmail');
+            const fnEl     = document.getElementById('cpFirstName');
+            const lnEl     = document.getElementById('cpLastName');
+
+            if (user.photoURL) {
+                avatarEl.innerHTML = `<img src="${user.photoURL}" alt="avatar">`;
+            } else {
+                avatarEl.textContent = (user.displayName || 'U')[0].toUpperCase();
+            }
+
+            nameEl.textContent  = user.displayName || 'مستخدم جديد';
+            emailEl.textContent = user.email || '';
+
+            // ملء الاسم تلقائياً من Google
+            if (user.displayName) {
+                const parts = user.displayName.split(' ');
+                if (fnEl) fnEl.value = parts[0] || '';
+                if (lnEl) lnEl.value = parts.slice(1).join(' ') || '';
+            }
+        });
+
+        // ===== خطوات النموذج =====
+        function cpGoToStep(step) {
+            [1, 2, 3].forEach(s => {
+                const el  = document.getElementById(`pstep${s}`);
+                const tab = document.getElementById(`tab${s}`);
+                if (el) el.style.display = s === step ? 'block' : 'none';
+                if (tab) {
+                    tab.classList.remove('active', 'done');
+                    if (s < step)  tab.classList.add('done');
+                    if (s === step) tab.classList.add('active');
+                }
+            });
+        }
+
+        function cpSelectType(type) {
+            document.querySelectorAll('#pstep1 .type-btn').forEach(b => b.classList.remove('selected'));
+            document.getElementById(`cp-btn-${type}`)?.classList.add('selected');
+        }
+
+        function cpValidateStep1() {
+            const firstName = document.getElementById('cpFirstName').value.trim();
+            const phone     = document.getElementById('cpPhone').value.trim();
+            const city      = document.getElementById('cpCity').value;
+            const age       = document.getElementById('cpAge').value;
+
+            if (!firstName) return showToast('يرجى إدخال اسمك الأول', 'error');
+            if (!phone || phone.length < 10) return showToast('يرجى إدخال رقم هاتف صحيح', 'error');
+            if (!city) return showToast('يرجى اختيار محافظتك', 'error');
+            if (!age || age < 16) return showToast('يرجى إدخال عمر صحيح', 'error');
+
+            cpGoToStep(2);
+        }
+
+        function selectBloodUnknown(btn) {
+            document.querySelectorAll('#pstep2 .blood-type-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            btn.dataset.value = 'unknown';
+        }
+
+        // ===== حفظ الملف الشخصي =====
+        async function saveProfile() {
+            const btn = document.getElementById('cpSaveBtn');
+
+            const bloodBtn  = document.querySelector('#pstep2 .blood-type-btn.selected');
+            const bloodType = bloodBtn?.dataset.value === 'unknown' ? '' : (bloodBtn?.textContent?.trim() || '');
+            const role      = document.querySelector('#pstep1 .type-btn.selected')?.dataset?.type || 'donor';
+
+            const firstName = document.getElementById('cpFirstName').value.trim();
+            const lastName  = document.getElementById('cpLastName').value.trim();
+            const phone     = document.getElementById('cpPhone').value.trim();
+            const city      = document.getElementById('cpCity').value;
+            const age       = parseInt(document.getElementById('cpAge').value) || 0;
+
+            if (!bloodBtn) return showToast('يرجى اختيار فصيلة دمك', 'error');
+
+            showLoading(btn, 'جاري الحفظ...');
+
+            try {
+                const userData = {
+                    name:      `${firstName} ${lastName}`.trim(),
+                    firstName, lastName, phone, city, age,
+                    bloodType, role,
+                    email:     currentUser.email || '',
+                    photoURL:  currentUser.photoURL || '',
+                    available: true,
+                    totalDonations: 0,
+                    lastDonation: null,
+                    profileComplete: true,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                // حفظ في users
+                await db.collection('users').doc(currentUser.uid).set(userData, { merge: true });
+
+                // إذا متبرع، أضفه في donors
+                if (role === 'donor') {
+                    await db.collection('donors').doc(currentUser.uid).set({
+                        ...userData, uid: currentUser.uid
+                    }, { merge: true });
+                }
+
+                cpGoToStep(3);
+
+            } catch (err) {
+                hideLoading(btn);
+                showToast('حدث خطأ في الحفظ، حاول مرة أخرى', 'error');
+                console.error(err);
+            }
+        }
+    </script>
+</body>
+</html>

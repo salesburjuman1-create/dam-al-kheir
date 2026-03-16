@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دم الخير — منصة التبرع بالدم في العراق</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i class="fas fa-droplet"></i></div>
+                <span class="logo-text">دم <strong>الخير</strong></span>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="active">الرئيسية</a></li>
+                <li><a href="donors.html">المتبرعون</a></li>
+                <li><a href="requests.html">طلبات الدم</a></li>
+                <li><a href="hospitals.html">المستشفيات</a></li>
+                <li><a href="#about">من نحن</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="login.html" class="btn-outline-sm nav-login-link">دخول</a>
+                <a href="register.html" class="btn-primary-sm nav-register-link">تسجيل <i class="fas fa-arrow-left"></i></a>
+                <a href="profile.html" class="btn-primary-sm nav-dash-link" style="display:none">
+                    <i class="fas fa-user-circle"></i> <span id="navUserName">حسابي</span>
+                </a>
+                <a href="admin.html" class="btn-outline-sm nav-admin-link" style="display:none;border-color:#C0152A;color:#C0152A;gap:6px">
+                    <i class="fas fa-shield-alt"></i> الإدارة
+                </a>
+            </div>
+            <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+        <div class="hero-bg">
+            <div class="bg-circle c1"></div>
+            <div class="bg-circle c2"></div>
+            <div class="bg-drops">
+                <span class="drop d1"><i class="fas fa-droplet"></i></span>
+                <span class="drop d2"><i class="fas fa-droplet"></i></span>
+                <span class="drop d3"><i class="fas fa-droplet"></i></span>
+                <span class="drop d4"><i class="fas fa-droplet"></i></span>
+            </div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-circle-check"></i> منصة موثوقة في العراق
+                </div>
+                <h1>
+                    تبرعك بالدم<br>
+                    <span class="highlight">ينقذ حياة</span>
+                </h1>
+                <p>نربط المتبرعين بالمحتاجين في لحظات الطوارئ — بسرعة، بأمان، بمحبة</p>
+                <div class="hero-buttons">
+                    <a href="request.html" class="btn-hero-primary">
+                        <i class="fas fa-heartbeat"></i> أحتاج دم الآن
+                    </a>
+                    <a href="register.html?type=donor" class="btn-hero-secondary">
+                        <i class="fas fa-hand-holding-heart"></i> أريد التبرع
+                    </a>
+                </div>
+                <div class="hero-trust">
+                    <div class="trust-item"><span id="donors-count">٠</span> متبرع</div>
+                    <div class="trust-divider"></div>
+                    <div class="trust-item"><span id="hospitals-count-hero">٨٩</span> مستشفى</div>
+                    <div class="trust-divider"></div>
+                    <div class="trust-item"><span>٩٨٪</span> نجاح</div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll"><i class="fas fa-chevron-down"></i></div>
+    </section>
+
+    <!-- ===== URGENT BANNER (ديناميكي من Firebase) ===== -->
+    <div class="urgent-banner" id="dynamicBanner" style="display:none">
+        <div class="container">
+            <div class="urgent-inner">
+                <span class="urgent-pulse"><i class="fas fa-bolt"></i></span>
+                <strong id="bannerStrong">طارئ!</strong>
+                <span id="bannerText"></span>
+                <a href="request.html" class="urgent-cta" id="bannerBtn">ساعد الآن</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== STATS ===== -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon donors"><i class="fas fa-users"></i></div>
+                    <div class="stat-info">
+                        <h3 class="counter" id="stat-donors" data-target="0">0</h3>
+                        <p>متبرع مسجل</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon donations"><i class="fas fa-tint"></i></div>
+                    <div class="stat-info">
+                        <h3 class="counter" id="stat-requests" data-target="0">0</h3>
+                        <p>عملية تبرع ناجحة</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon hospitals"><i class="fas fa-hospital"></i></div>
+                    <div class="stat-info">
+                        <h3 class="counter" id="stat-hospitals" data-target="89">0</h3>
+                        <p>مستشفى شريك</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon emergency"><i class="fas fa-circle-exclamation"></i></div>
+                    <div class="stat-info">
+                        <h3 class="counter" id="stat-urgent" data-target="0">0</h3>
+                        <p>حالة طارئة الآن</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== HOW IT WORKS ===== -->
+    <section class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">كيف نعمل</span>
+                <h2>ثلاث خطوات بسيطة</h2>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-num">١</div>
+                    <div class="step-icon"><i class="fas fa-user-plus"></i></div>
+                    <h3>سجّل حسابك</h3>
+                    <p>سجّل كمتبرع أو طالب دم في أقل من دقيقتين</p>
+                </div>
+                <div class="step-connector"><i class="fas fa-arrow-left"></i></div>
+                <div class="step-card">
+                    <div class="step-num">٢</div>
+                    <div class="step-icon"><i class="fas fa-search-location"></i></div>
+                    <h3>ابحث أو أرسل طلب</h3>
+                    <p>ابحث عن متبرعين قريبين أو أرسل طلب دم عاجل</p>
+                </div>
+                <div class="step-connector"><i class="fas fa-arrow-left"></i></div>
+                <div class="step-card">
+                    <div class="step-num">٣</div>
+                    <div class="step-icon"><i class="fas fa-heart-pulse"></i></div>
+                    <h3>أنقذ حياة</h3>
+                    <p>تواصل مباشرة وساعد في إنقاذ حياة الآخرين</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== BLOOD TYPES ===== -->
+    <section class="blood-types">
+        <div class="container">
+            <div class="section-header light">
+                <span class="section-tag">فصائل الدم</span>
+                <h2>ابحث عن فصيلتك</h2>
+            </div>
+            <div class="blood-grid">
+                <a href="donors.html?blood=A+" class="blood-card"><span class="blood-label">A+</span><span class="blood-count">٢٣٠ متبرع</span></a>
+                <a href="donors.html?blood=A-" class="blood-card rare"><span class="blood-label">A-</span><span class="blood-count">٤٥ متبرع</span><span class="blood-rare">نادر</span></a>
+                <a href="donors.html?blood=B+" class="blood-card"><span class="blood-label">B+</span><span class="blood-count">١٨٠ متبرع</span></a>
+                <a href="donors.html?blood=B-" class="blood-card rare"><span class="blood-label">B-</span><span class="blood-count">٣٢ متبرع</span><span class="blood-rare">نادر</span></a>
+                <a href="donors.html?blood=AB+" class="blood-card"><span class="blood-label">AB+</span><span class="blood-count">١٢٠ متبرع</span></a>
+                <a href="donors.html?blood=AB-" class="blood-card rare"><span class="blood-label">AB-</span><span class="blood-count">١٨ متبرع</span><span class="blood-rare">نادر جداً</span></a>
+                <a href="donors.html?blood=O+" class="blood-card universal"><span class="blood-label">O+</span><span class="blood-count">٣٥٠ متبرع</span><span class="blood-rare">الأكثر</span></a>
+                <a href="donors.html?blood=O-" class="blood-card rare urgent-blood"><span class="blood-label">O-</span><span class="blood-count">٢٨ متبرع</span><span class="blood-rare">طارئ!</span></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== LATEST REQUESTS ===== -->
+    <section class="latest-requests">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">آخر الطلبات</span>
+                <h2>طلبات الدم الأخيرة</h2>
+                <a href="requests.html" class="see-all">عرض الكل <i class="fas fa-arrow-left"></i></a>
+            </div>
+            <div class="requests-list" id="requests-list"></div>
+        </div>
+    </section>
+
+    <!-- ===== من نحن ===== -->
+    <section id="about" style="padding:80px 0;background:white">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">من نحن</span>
+                <h2>قصتنا ورسالتنا</h2>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center">
+                <div>
+                    <p style="font-size:1.05rem;color:var(--gray-600);line-height:1.9;margin-bottom:20px">
+                        <strong style="color:var(--gray-900)">دم الخير</strong> منصة عراقية أُسست عام ٢٠٢٤ بهدف واحد واضح:
+                        تقليص الفجوة بين المتبرعين بالدم والمرضى المحتاجين في لحظات الطوارئ.
+                    </p>
+                    <p style="font-size:1rem;color:var(--gray-600);line-height:1.9;margin-bottom:24px">
+                        نؤمن أن كل قطرة دم يمكن أن تنقذ حياة، وأن التكنولوجيا يجب أن تخدم الإنسانية.
+                        لهذا بنينا منصة سهلة وسريعة تربط المتبرعين بالمستشفيات والمرضى في جميع محافظات العراق.
+                    </p>
+                    <div style="display:flex;flex-direction:column;gap:12px">
+                        <div style="display:flex;align-items:center;gap:12px;font-size:0.9rem;color:var(--gray-700)">
+                            <div style="width:36px;height:36px;background:var(--red-faint);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--red);flex-shrink:0"><i class="fas fa-shield-alt"></i></div>
+                            بياناتك محمية وسرية بالكامل
+                        </div>
+                        <div style="display:flex;align-items:center;gap:12px;font-size:0.9rem;color:var(--gray-700)">
+                            <div style="width:36px;height:36px;background:var(--red-faint);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--red);flex-shrink:0"><i class="fas fa-bolt"></i></div>
+                            إشعارات فورية عند وجود طلب بفصيلتك
+                        </div>
+                        <div style="display:flex;align-items:center;gap:12px;font-size:0.9rem;color:var(--gray-700)">
+                            <div style="width:36px;height:36px;background:var(--red-faint);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--red);flex-shrink:0"><i class="fas fa-hand-holding-heart"></i></div>
+                            مجاني تماماً للمتبرعين والمرضى
+                        </div>
+                    </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                    <div style="background:linear-gradient(135deg,var(--red-dark),var(--red));border-radius:var(--radius-lg);padding:32px 24px;color:white;text-align:center">
+                        <div style="font-size:2.5rem;font-weight:900;margin-bottom:8px">٢٤/٧</div>
+                        <div style="font-size:0.875rem;opacity:0.85">خدمة مستمرة</div>
+                    </div>
+                    <div style="background:var(--gray-100);border-radius:var(--radius-lg);padding:32px 24px;text-align:center;border:1px solid var(--gray-200)">
+                        <div style="font-size:2.5rem;font-weight:900;color:var(--gray-900);margin-bottom:8px">١٨</div>
+                        <div style="font-size:0.875rem;color:var(--gray-600)">محافظة عراقية</div>
+                    </div>
+                    <div style="background:var(--gray-100);border-radius:var(--radius-lg);padding:32px 24px;text-align:center;border:1px solid var(--gray-200)">
+                        <div style="font-size:2.5rem;font-weight:900;color:var(--gray-900);margin-bottom:8px">٠</div>
+                        <div style="font-size:0.875rem;color:var(--gray-600)">رسوم أو عمولة</div>
+                    </div>
+                    <div style="background:linear-gradient(135deg,#16A34A,#15803D);border-radius:var(--radius-lg);padding:32px 24px;color:white;text-align:center">
+                        <div style="font-size:2rem;font-weight:900;margin-bottom:8px">٩٨٪</div>
+                        <div style="font-size:0.875rem;opacity:0.85">نسبة نجاح</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-box">
+                <div class="cta-text">
+                    <h2>كن سبباً في إنقاذ حياة</h2>
+                    <p>التبرع بالدم لا يكلفك شيئاً، لكنه يمنح شخصاً آخر فرصة للحياة</p>
+                </div>
+                <div class="cta-actions">
+                    <a href="register.html?type=donor" class="btn-cta-primary"><i class="fas fa-heart"></i> سجّل كمتبرع</a>
+                    <a href="request.html" class="btn-cta-secondary">أطلب دم عاجل</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <div class="logo-icon"><i class="fas fa-droplet"></i></div>
+                        <span class="logo-text">دم <strong>الخير</strong></span>
+                    </div>
+                    <p>منصة عراقية لربط المتبرعين بالمحتاجين للدم في أوقات الطوارئ</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>روابط سريعة</h4>
+                    <ul>
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="donors.html">المتبرعون</a></li>
+                        <li><a href="requests.html">طلبات الدم</a></li>
+                        <li><a href="hospitals.html">المستشفيات</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>حسابي</h4>
+                    <ul>
+                        <li><a href="login.html">تسجيل الدخول</a></li>
+                        <li><a href="register.html">حساب جديد</a></li>
+                        <li><a href="request.html">طلب دم</a></li>
+                        <li><a href="admin.html" id="adminFooterLink" style="display:none">لوحة الإدارة</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>تواصل معنا</h4>
+                    <p><i class="fas fa-phone"></i> 07711763931</p>
+                    <p><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d0b9beb6bf90b4b1bdb1bcbbb8b5b9a2feb9a1">[email&#160;protected]</a></p>
+                    <p><i class="fas fa-map-marker-alt"></i> بغداد، العراق</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 دم الخير — جميع الحقوق محفوظة</p>
+                <p>صُنع بـ <i class="fas fa-heart" style="color:#e63946"></i> من أجل العراق</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase -->
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // ===== تحميل الإحصائيات الحقيقية =====
+        async function loadRealStats() {
+            try {
+                const [donorsSnap, requestsSnap] = await Promise.all([
+                    db.collection('donors').where('available','==',true).get(),
+                    db.collection('blood_requests').where('status','==','active').get()
+                ]);
+                const urgentCount = requestsSnap.docs.filter(d => d.data().urgent).length;
+
+                animateNumber('stat-donors',   donorsSnap.size);
+                animateNumber('stat-requests', requestsSnap.size);
+                animateNumber('stat-hospitals', 89);
+                animateNumber('stat-urgent',   urgentCount);
+
+                // Hero trust bar
+                document.getElementById('donors-count').textContent = donorsSnap.size.toLocaleString('ar-EG') + '+';
+            } catch(e) {
+                // fallback للأرقام الافتراضية
+                animateNumber('stat-donors', 1234);
+                animateNumber('stat-requests', 567);
+                animateNumber('stat-hospitals', 89);
+                animateNumber('stat-urgent', 12);
+            }
+        }
+
+        function animateNumber(id, target) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const duration = 1800, step = target / (duration / 16);
+            let current = 0;
+            const timer = setInterval(() => {
+                current = Math.min(current + step, target);
+                el.textContent = Math.floor(current).toLocaleString('ar-EG');
+                if (current >= target) clearInterval(timer);
+            }, 16);
+        }
+
+        // ===== البنر الديناميكي =====
+        function showBanner(b) {
+            const banner = document.getElementById('dynamicBanner');
+            if (!banner) return;
+            const textEl   = document.getElementById('bannerText');
+            const btnEl    = document.getElementById('bannerBtn');
+            const strongEl = document.getElementById('bannerStrong');
+            if (textEl)   textEl.textContent   = b.text    || '';
+            if (btnEl)    btnEl.textContent     = b.btnText || 'ساعد الآن';
+            if (btnEl)    btnEl.href            = b.link    || 'request.html';
+            if (strongEl) strongEl.textContent  = b.type === 'info' ? 'إعلان' : b.type === 'success' ? 'خبر' : 'طارئ!';
+            const typeStyles = {
+                info:    'background:linear-gradient(90deg,#1A1A3A,#0D0D2D)',
+                success: 'background:linear-gradient(90deg,#0D2B10,#052010)',
+                urgent:  'background:linear-gradient(90deg,#0D0D0D,#2D0005)'
+            };
+            banner.style.cssText = typeStyles[b.type] || typeStyles.urgent;
+            banner.style.display = 'block';
+        }
+
+        db.collection('banners')
+            .where('active','==',true)
+            .limit(5)
+            .onSnapshot(snap => {
+                const banner = document.getElementById('dynamicBanner');
+                if (!snap.empty) {
+                    // أظهر البنر الأول النشط
+                    showBanner(snap.docs[0].data());
+                } else {
+                    if (banner) banner.style.display = 'none';
+                }
+            }, (err) => {
+                console.warn('Banner:', err.message);
+                // إذا فشل — جرب بدون where
+                db.collection('banners').limit(1).get().then(snap => {
+                    if (!snap.empty) {
+                        const b = snap.docs[0].data();
+                        if (b.active) showBanner(b);
+                    }
+                }).catch(() => {});
+            });
+
+        // =

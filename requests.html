@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طلبات الدم — دم الخير</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i class="fas fa-droplet"></i></div>
+                <span class="logo-text">دم <strong>الخير</strong></span>
+            </a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="donors.html">المتبرعون</a></li>
+                <li><a href="requests.html" class="active">طلبات الدم</a></li>
+                <li><a href="hospitals.html">المستشفيات</a></li>
+            </ul>
+                        <div class="nav-actions">
+                <a href="login.html" class="btn-outline-sm nav-login-link">دخول</a>
+                <a href="register.html" class="btn-primary-sm nav-register-link">تسجيل <i class="fas fa-arrow-left"></i></a>
+                <a href="profile.html" class="btn-primary-sm nav-dash-link" style="display:none">
+                    <i class="fas fa-user-circle"></i> <span id="navUserName">حسابي</span>
+                </a>
+                <a href="admin.html" class="btn-outline-sm nav-admin-link" style="display:none;border-color:#C0152A;color:#C0152A;gap:6px">
+                    <i class="fas fa-shield-alt"></i> الإدارة
+                </a>
+            </div>
+            <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <!-- Page Banner -->
+    <div style="background:linear-gradient(135deg,#1A1A1A,#2D0005);padding:48px 0;color:white">
+        <div class="container" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px">
+            <div>
+                <h1 style="font-size:2.2rem;font-weight:900;margin-bottom:8px">طلبات الدم</h1>
+                <p style="opacity:0.7">كل الطلبات الواردة — ساعد من تستطيع</p>
+            </div>
+            <a href="request.html" class="btn-hero-primary" style="background:var(--red);color:white;border:2px solid rgba(255,255,255,0.2)">
+                <i class="fas fa-plus-circle"></i> أضف طلب جديد
+            </a>
+        </div>
+    </div>
+
+    <section class="list-page">
+        <div class="container">
+            <!-- Filters -->
+            <div class="filters-bar fade-in">
+                <input class="search-input" type="search" placeholder="🔍 ابحث بالمستشفى أو المدينة...">
+                <select class="filter-select">
+                    <option value="">كل فصائل الدم</option>
+                    <option>A+</option><option>A-</option>
+                    <option>B+</option><option>B-</option>
+                    <option>AB+</option><option>AB-</option>
+                    <option>O+</option><option>O-</option>
+                </select>
+                <select class="filter-select">
+                    <option value="">كل المحافظات</option>
+                    <option>بغداد</option><option>البصرة</option>
+                    <option>الموصل</option><option>كربلاء</option>
+                    <option>النجف</option><option>أربيل</option>
+                </select>
+                <select class="filter-select">
+                    <option>الكل</option>
+                    <option>طارئ فقط</option>
+                    <option>مجدول</option>
+                </select>
+            </div>
+
+            <!-- Results -->
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+                <p style="font-size:0.875rem;color:var(--gray-600)">
+                    <strong id="requestsCount" style="color:var(--red)">٨</strong> طلب نشط الآن
+                </p>
+            </div>
+
+            <div class="requests-list" id="full-requests-list">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top:1px solid rgba(255,255,255,0.1);padding-top:20px">
+                <p>© ٢٠٢٤ دم الخير — جميع الحقوق محفوظة</p>
+                <p>صُنع بـ <i class="fas fa-heart" style="color:#e63946"></i> من أجل العراق</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase v9 compat -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
