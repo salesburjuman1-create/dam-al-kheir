@@ -610,16 +610,17 @@
     const ADMIN_EMAILS = ['sales.burjuman1@gmail.com']; // 
 
     document.addEventListener('DOMContentLoaded', () => {
+        // إخفاء كل شي ريثما نعرف حالة المستخدم
         document.getElementById('adminLoginGate').style.display = 'none';
         document.getElementById('adminDashboard').style.display = 'none';
 
         auth.onAuthStateChanged(async user => {
             if (user && ADMIN_EMAILS.includes(user.email)) {
+                // ✅ مسجل كأدمن — ادخل مباشرة بدون طلب باسوورد
                 showDashboard(user);
             } else if (user) {
-                // مسجل لكن ليس أدمن — أخرجه
+                // مسجل لكن ليس أدمن — أخرجه وأظهر شاشة الدخول
                 await auth.signOut();
-                // onAuthStateChanged سيُطلق تلقائياً (user=null) ويعرض شاشة الدخول
             } else {
                 // غير مسجل — أظهر شاشة دخول الأدمن
                 document.getElementById('adminLoginGate').style.cssText = 'display:flex;min-height:100vh;background:#0F0F0F;align-items:center;justify-content:center';
