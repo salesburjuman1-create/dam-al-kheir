@@ -442,26 +442,22 @@
             wrapper.style.display = 'block';
         }
 
-        db.collection('banners')
-            .where('active','==',true)
-            .limit(5)
-            .onSnapshot(snap => {
-                const banner = document.getElementById('dynamicBanner');
-                if (!snap.empty) {
-                    // أظهر البنر الأول النشط
-                    showBanner(snap.docs[0].data());
-                } else {
-                    if (banner) banner.style.display = 'none';
-                }
-            }, (err) => {
-                console.warn('Banner:', err.message);
-                // إذا فشل — جرب بدون where
-                db.collection('banners').limit(1).get().then(snap => {
-                    if (!snap.empty) {
-                        const b = snap.docs[0].data();
-                        if (b.active) showBanner(b);
-                    }
-                }).catch(() => {});
-            });
+      // بنر — بدون where+orderBy لتجنب الـ Index
+db.collection('banners')
+    .onSnapshot(snap => {
+        const banner = document.getElementById('dynamicBanner');
+        if (snap.empty) { if (banner) banner.style.display = 'none'; return; }
+        // فلتر يدوي للـ active
+        const activeBanners = snap.docs
+            .map(d => ({id:d.id,...d.data()}))
+            .filter(b => b.active === true);
+        if (activeBanners.length > 0) {
+            showBanner(activeBanners[0]);
+        } else {
+            if (banner) banner.style.display = 'none';
+        }
+    }, (err) => {
+        console.warn('Banner error:', err.message);
+    });
 
         // =
