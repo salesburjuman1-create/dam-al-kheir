@@ -616,16 +616,14 @@
         auth.onAuthStateChanged(async user => {
             if (user && ADMIN_EMAILS.includes(user.email)) {
                 showDashboard(user);
-           } else if (user) {
-    await auth.signOut();
-    // onAuthStateChanged سيُطلق تلقائياً بعد signOut ويعرض loginGate
-} else {
-    document.getElementById('adminLoginGate').style.cssText = 'display:flex;min-height:100vh;background:#0F0F0F;align-items:center;justify-content:center';
-    document.getElementById('adminDashboard').style.display = 'none';
-}
-            
+            } else if (user) {
+                // مسجل لكن ليس أدمن — أخرجه
+                await auth.signOut();
+                // onAuthStateChanged سيُطلق تلقائياً (user=null) ويعرض شاشة الدخول
             } else {
-              
+                // غير مسجل — أظهر شاشة دخول الأدمن
+                document.getElementById('adminLoginGate').style.cssText = 'display:flex;min-height:100vh;background:#0F0F0F;align-items:center;justify-content:center';
+                document.getElementById('adminDashboard').style.display = 'none';
             }
         });
     });
