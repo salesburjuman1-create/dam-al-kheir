@@ -223,10 +223,14 @@
                 const d   = doc.exists ? doc.data() : {};
                 currentData = d;
 
-                // Avatar
+                // Avatar — نقرأ من Firestore أولاً ثم Firebase Auth
                 const av = document.getElementById('pAvatar');
-                if (user.photoURL) av.innerHTML = `<img src="${user.photoURL}">`;
-                else av.textContent = (d.firstName || d.name || 'U')[0]?.toUpperCase() || 'U';
+                const photoSrc = d.photoURL || user.photoURL || '';
+                if (photoSrc) {
+                    av.innerHTML = `<img src="${photoSrc}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+                } else {
+                    av.textContent = (d.firstName || d.name || 'U')[0]?.toUpperCase() || 'U';
+                }
 
                 // Info
                 document.getElementById('pName').textContent   = d.name || user.displayName || '—';
