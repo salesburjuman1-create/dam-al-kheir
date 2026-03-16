@@ -45,6 +45,27 @@
                 <p>سيتم إرسال طلبك فوراً لجميع المتبرعين القريبين منك</p>
             </div>
 
+            <!-- حقول المتبرع الإضافية -->
+<div class="form-group">
+    <label>آخر مرة تبرعت فيها</label>
+    <input type="date" id="lastDonationDate" name="lastDonationDate">
+</div>
+<div class="form-group">
+    <label>هل تدخن؟</label>
+    <select id="isSmoker">
+        <option value="no">لا</option>
+        <option value="yes">نعم</option>
+    </select>
+</div>
+<div class="form-group">
+    <label>هل تعاني من أمراض مزمنة؟</label>
+    <select id="hasChronicDisease">
+        <option value="no">لا</option>
+        <option value="yes">نعم — أحدد:</option>
+    </select>
+    <input type="text" id="chronicDiseaseDetails" placeholder="مثال: سكري، ضغط..." style="margin-top:8px;display:none">
+</div>
+
             <div class="request-form-card fade-in">
                 <!-- Urgency -->
                 <p class="form-section-title"><i class="fas fa-bolt"></i> مستوى الطوارئ</p>
