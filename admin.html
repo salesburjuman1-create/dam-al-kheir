@@ -211,6 +211,14 @@
 </head>
 <body>
 
+<!-- Loading Screen — يظهر ريثما Firebase يتحقق -->
+<div id="adminLoadingScreen" style="position:fixed;inset:0;background:#0F0F0F;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999">
+    <div style="width:52px;height:52px;background:var(--red);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;box-shadow:0 0 30px rgba(192,21,42,0.4)">
+        <i class="fas fa-droplet" style="color:white;font-size:1.4rem"></i>
+    </div>
+    <p style="color:#555;font-size:0.875rem;font-family:'Cairo',sans-serif">جاري التحقق من الصلاحيات...</p>
+</div>
+
 <!-- Access Gate — يظهر فقط إذا المستخدم مو أدمن أو غير مسجل -->
 <div id="adminLoginGate" style="display:none;min-height:100vh;background:#0F0F0F;align-items:center;justify-content:center">
     <div style="background:#141414;border:1px solid #222;border-radius:20px;padding:48px 40px;width:100%;max-width:400px;text-align:center">
@@ -606,12 +614,16 @@
         document.getElementById('adminDashboard').style.display = 'none';
 
         auth.onAuthStateChanged(async user => {
+            // أخفِ شاشة التحميل دائماً بعد ما Firebase يرجع
+            const loadingEl = document.getElementById('adminLoadingScreen');
+            if (loadingEl) loadingEl.style.display = 'none';
+
             if (user && ADMIN_EMAILS.includes(user.email)) {
                 // ✅ أدمن — ادخل مباشرة
                 showDashboard(user);
             } else {
                 // ❌ مو أدمن أو غير مسجل — أظهر شاشة الرفض
-                if (user) await auth.signOut(); // أخرج غير الأدمن
+                if (user) await auth.signOut();
                 const msg = document.getElementById('accessMsg');
                 if (msg) {
                     msg.textContent = user
