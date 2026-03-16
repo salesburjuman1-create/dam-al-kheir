@@ -84,6 +84,26 @@
                             <div class="p-blood" id="pBlood">—</div>
                             <div class="p-city"><i class="fas fa-map-marker-alt"></i> <span id="pCity">—</span></div>
                         </div>
+                        <!-- حقول المتبرع الإضافية -->
+<div class="form-group">
+    <label>آخر مرة تبرعت فيها</label>
+    <input type="date" id="lastDonationDate" name="lastDonationDate">
+</div>
+<div class="form-group">
+    <label>هل تدخن؟</label>
+    <select id="isSmoker">
+        <option value="no">لا</option>
+        <option value="yes">نعم</option>
+    </select>
+</div>
+<div class="form-group">
+    <label>هل تعاني من أمراض مزمنة؟</label>
+    <select id="hasChronicDisease">
+        <option value="no">لا</option>
+        <option value="yes">نعم — أحدد:</option>
+    </select>
+    <input type="text" id="chronicDiseaseDetails" placeholder="مثال: سكري، ضغط..." style="margin-top:8px;display:none">
+</div>
                         <div class="pcard-body">
                             <div class="pstat-row">
                                 <div class="pstat"><div class="pstat-num" id="pDonations">0</div><div class="pstat-lbl">تبرعاتي</div></div>
