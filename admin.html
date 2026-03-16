@@ -819,7 +819,7 @@
 
     // ===== BANNERS =====
     function loadBanners() {
-        db.collection('banners').orderBy('createdAt','desc').onSnapshot(snap => {
+        db.collection('banners').onSnapshot(snap => {
             const list = document.getElementById('bannersList');
             if (snap.empty) {
                 list.innerHTML = '<p style="color:#444;text-align:center;padding:20px">لا توجد بنرات — أضف واحداً!</p>';
