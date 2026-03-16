@@ -616,10 +616,13 @@
         auth.onAuthStateChanged(async user => {
             if (user && ADMIN_EMAILS.includes(user.email)) {
                 showDashboard(user);
-            } else if (user) {
-                // مسجل لكن ليس أدمن
-                document.getElementById('adminLoginGate').style.cssText = 'display:flex;min-height:100vh;background:#0F0F0F;align-items:center;justify-content:center';
-                document.getElementById('adminDashboard').style.display = 'none';
+           } else if (user) {
+    await auth.signOut();
+    // onAuthStateChanged سيُطلق تلقائياً بعد signOut ويعرض loginGate
+} else {
+    document.getElementById('adminLoginGate').style.cssText = 'display:flex;min-height:100vh;background:#0F0F0F;align-items:center;justify-content:center';
+    document.getElementById('adminDashboard').style.display = 'none';
+}
                 await auth.signOut();
             } else {
                 document.getElementById('adminLoginGate').style.cssText = 'display:flex;min-height:100vh;background:#0F0F0F;align-items:center;justify-content:center';
