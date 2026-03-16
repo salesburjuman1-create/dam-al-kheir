@@ -79,7 +79,14 @@
                 <div>
                     <div class="pcard">
                         <div class="pcard-top">
-                            <div class="p-avatar" id="pAvatar">؟</div>
+                            <div style="position:relative;width:88px;margin:0 auto 14px">
+                                <div class="p-avatar" id="pAvatar" style="margin:0">؟</div>
+                                <label for="profileImgInput" title="تغيير الصورة"
+                                    style="position:absolute;bottom:0;left:0;width:26px;height:26px;background:var(--red);border-radius:50%;border:2px solid white;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.65rem;color:white">
+                                    <i class="fas fa-camera"></i>
+                                </label>
+                                <input type="file" id="profileImgInput" accept="image/*" style="display:none" onchange="uploadProfileImage(this)">
+                            </div>
                             <div class="p-name"  id="pName">—</div>
                             <div class="p-blood" id="pBlood">—</div>
                             <div class="p-city"><i class="fas fa-map-marker-alt"></i> <span id="pCity">—</span></div>
@@ -352,6 +359,38 @@ setTimeout(() => window.location.href = 'index.html', 1500);
             } catch(e) {
                 hideLoading(btn);
                 showToast('حدث خطأ في الحفظ', 'error');
+            }
+        }
+
+        const IMGBB_KEY = '5f6aa85734c193cfb5d15484c21a829e';
+
+        async function uploadProfileImage(input) {
+            const file = input.files[0];
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) return showToast('الصورة أكبر من 5MB', 'error');
+
+            showToast('جاري رفع الصورة...', 'info');
+            try {
+                const formData = new FormData();
+                formData.append('image', file);
+                const res  = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, { method:'POST', body:formData });
+                const data = await res.json();
+                if (!data.success) throw new Error('فشل');
+
+                const url = data.data.url;
+
+                // تحديث الـ avatar في الصفحة
+                const av = document.getElementById('pAvatar');
+                av.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+
+                // حفظ في Firestore
+                await db.collection('users').doc(currentUid).set({ photoURL: url }, { merge: true });
+                if (currentData.role === 'donor') {
+                    await db.collection('donors').doc(currentUid).set({ photoURL: url }, { merge: true });
+                }
+                showToast('تم تحديث الصورة بنجاح ✓', 'success');
+            } catch(e) {
+                showToast('فشل رفع الصورة، حاول مرة أخرى', 'error');
             }
         }
 
