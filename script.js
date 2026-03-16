@@ -50,6 +50,16 @@ function formatArabicTime(timestamp) {
 function phoneToEmail(phone) {
     return `${phone.replace(/[^0-9]/g,'')}@damalkheir.iq`;
 }
+
+function handleDonorBtn(e) {
+    e.preventDefault();
+    if (auth.currentUser) {
+        window.location.href = 'donors.html';
+    } else {
+        window.location.href = 'register.html?type=donor';
+    }
+}
+
 function getAuthError(code) {
     const map = {
         'auth/user-not-found':         'رقم الهاتف غير مسجل',
