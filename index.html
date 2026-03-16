@@ -67,7 +67,7 @@
                     <a href="request.html" class="btn-hero-primary">
                         <i class="fas fa-heartbeat"></i> أحتاج دم الآن
                     </a>
-                    <a href="donors.html" id="wantToDonateBtn" class="btn-hero-secondary" onclick="handleDonorBtn(event)">
+                    <a href="register.html?type=donor" id="wantToDonateBtn" class="btn-hero-secondary" onclick="handleDonorBtn(event)">
                         <i class="fas fa-hand-holding-heart"></i> أريد التبرع
                     </a>
                 </div>
@@ -442,22 +442,46 @@
             wrapper.style.display = 'block';
         }
 
-      // بنر — بدون where+orderBy لتجنب الـ Index
-db.collection('banners')
-    .onSnapshot(snap => {
-        const banner = document.getElementById('dynamicBanner');
-        if (snap.empty) { if (banner) banner.style.display = 'none'; return; }
-        // فلتر يدوي للـ active
-        const activeBanners = snap.docs
-            .map(d => ({id:d.id,...d.data()}))
-            .filter(b => b.active === true);
-        if (activeBanners.length > 0) {
-            showBanner(activeBanners[0]);
-        } else {
-            if (banner) banner.style.display = 'none';
-        }
-    }, (err) => {
-        console.warn('Banner error:', err.message);
-    });
+        // بنر ديناميكي — بدون where لتجنب مشكلة الـ Index
+        db.collection('banners')
+            .onSnapshot(snap => {
+                const banner = document.getElementById('dynamicBanner');
+                if (snap.empty) { if (banner) banner.style.display = 'none'; return; }
+                // فلتر يدوي — active فقط
+                const actives = snap.docs
+                    .map(d => ({id: d.id, ...d.data()}))
+                    .filter(b => b.active === true);
+                if (actives.length > 0) {
+                    showBanner(actives[0]);
+                } else {
+                    if (banner) banner.style.display = 'none';
+                }
+            }, (err) => {
+                console.warn('Banner error:', err.message);
+            });
 
         // =
+
+        // زر "أريد التبرع" — إذا مسجل يروح لصفحة الملف الشخصي لإكمال بيانات التبرع
+        // إذا غير مسجل يروح لصفحة التسجيل كمتبرع
+        function handleDonorBtn(e) {
+            e.preventDefault();
+            if (typeof auth !== 'undefined' && auth.currentUser) {
+                // مسجل — تحقق هل هو متبرع
+                const uid = auth.currentUser.uid;
+                db.collection('users').doc(uid).get().then(doc => {
+                    if (doc.exists && doc.data().role === 'donor') {
+                        // متبرع مسجل — روح للملف الشخصي
+                        window.location.href = 'profile.html';
+                    } else {
+                        // مسجل لكن مش متبرع أو ما أكمل ملفه
+                        window.location.href = 'complete-profile.html';
+                    }
+                }).catch(() => {
+                    window.location.href = 'register.html?type=donor';
+                });
+            } else {
+                // غير مسجل — صفحة التسجيل
+                window.location.href = 'register.html?type=donor';
+            }
+        }
