@@ -345,6 +345,8 @@ function loadRequests(containerId, limitCount=20, urgentOnly=false) {
         }
     });
 }
+let _allRequests = [];
+
 function filterRequests() {
     const search  = document.getElementById('reqSearch')?.value?.toLowerCase()||'';
     const blood   = document.getElementById('reqBloodFilter')?.value||'';
