@@ -59,27 +59,27 @@
         <option value="yes">نعم</option>
     </select>
 </div>
-<div class="form-group">
-    <label>هل تعاني من أمراض مزمنة؟</label>
-    <select id="hasChronicDisease">
-        <option value="no">لا</option>
-        <option value="yes">نعم — أحدد:</option>
-    </select>
-    <input type="text" id="chronicDiseaseDetails" placeholder="مثال: سكري، ضغط..." style="margin-top:8px;display:none">
-</div>
 
-            <div class="request-form-card fade-in">
-                <!-- Urgency -->
-                <p class="form-section-title"><i class="fas fa-bolt"></i> مستوى الطوارئ</p>
-                <div class="urgency-toggle" style="margin-bottom:28px">
-                    <button class="urgency-btn urgent selected" id="urgentBtn" onclick="selectUrgency('urgent')">
-                        <i class="fas fa-circle-exclamation"></i> طارئ — خلال ساعات
-                    </button>
-                    <button class="urgency-btn normal" id="normalBtn" onclick="selectUrgency('normal')">
-                        <i class="fas fa-calendar-alt"></i> مجدول — خلال أيام
-                    </button>
+
+            <!-- معلومات صحية إضافية للمريض -->
+                <p class="form-section-title" style="margin-top:8px"><i class="fas fa-notes-medical"></i> المعلومات الصحية</p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>هل يعاني المريض من أمراض مزمنة؟</label>
+                        <select id="patientChronic">
+                            <option value="no">لا</option>
+                            <option value="yes">نعم</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>هل يعاني من أمراض الدم؟</label>
+                        <select id="patientBloodDisease" onchange="document.getElementById('patientBloodDiseaseDetails').style.display=this.value==='yes'?'block':'none'">
+                            <option value="no">لا</option>
+                            <option value="yes">نعم — أحدد:</option>
+                        </select>
+                        <input type="text" id="patientBloodDiseaseDetails" placeholder="مثال: تكسر كريات، هيموفيليا..." style="margin-top:8px;display:none;width:100%;padding:10px 14px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-family:var(--font-main);font-size:0.9rem;outline:none">
+                    </div>
                 </div>
-
                 <!-- Blood Type -->
                 <p class="form-section-title"><i class="fas fa-tint"></i> فصيلة الدم المطلوبة</p>
                 <div class="blood-type-selector" style="margin-bottom:28px">
